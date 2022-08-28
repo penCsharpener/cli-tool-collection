@@ -31,6 +31,11 @@ public class RenameService : IRenameService
     {
         foreach (var file in files)
         {
+            if (stoppingToken.IsCancellationRequested)
+            {
+                break;
+            }
+
             var fileName = Path.GetFileNameWithoutExtension(file);
             var fileExtensions = Path.GetExtension(file);
 
@@ -133,10 +138,5 @@ public class RenameService : IRenameService
         return file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
         || file.EndsWith(".webp", StringComparison.OrdinalIgnoreCase)
         || file.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
-    }
-
-    public IAsyncEnumerable<string> GetNameCommandsAsync(RenameParameters options, CancellationToken stoppingToken = default)
-    {
-        throw new NotImplementedException();
     }
 }

@@ -26,4 +26,7 @@ public class RenameParameters : ICommandParameterSet
             GlobalOptions.PreferCmd = _preferCmd;
         }
     }
+
+    [Option('x', Description = "Executes the renaming command after printing it. Only supported with powershell.")]
+    public bool ExecuteRename { get; set; }
 }
