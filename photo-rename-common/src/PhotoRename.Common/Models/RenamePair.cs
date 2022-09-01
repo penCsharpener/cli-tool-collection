@@ -1,4 +1,4 @@
-﻿namespace PhotoRenamer.Cli.Models;
+﻿namespace PhotoRename.Common.Models;
 
 public record RenamePair
 {

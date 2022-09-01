@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.32804.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C350D883-E395-487D-89E8-07D1EE9F3D66}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5081BD37-699C-40AF-B876-B9186E63C4BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoTimeStampShifter.Cli", "src\PhotoTimeStampShifter.Cli\PhotoTimeStampShifter.Cli.csproj", "{D35BEFCB-769D-4A6F-B6FD-1DA042E46687}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PhotoRename.Common", "PhotoRename.Common", "{8308544E-4C5D-480A-AA85-2FFE8EF83D48}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoRename.Common", "..\photo-rename-common\src\PhotoRename.Common\PhotoRename.Common.csproj", "{EA0140D0-2C41-4337-A2EC-C3F9CBBC99B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0821374E-A91F-475E-A6F4-049AE720C65C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D35BEFCB-769D-4A6F-B6FD-1DA042E46687}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D35BEFCB-769D-4A6F-B6FD-1DA042E46687}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D35BEFCB-769D-4A6F-B6FD-1DA042E46687}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D35BEFCB-769D-4A6F-B6FD-1DA042E46687}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA0140D0-2C41-4337-A2EC-C3F9CBBC99B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA0140D0-2C41-4337-A2EC-C3F9CBBC99B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA0140D0-2C41-4337-A2EC-C3F9CBBC99B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA0140D0-2C41-4337-A2EC-C3F9CBBC99B1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D35BEFCB-769D-4A6F-B6FD-1DA042E46687} = {C350D883-E395-487D-89E8-07D1EE9F3D66}
+		{EA0140D0-2C41-4337-A2EC-C3F9CBBC99B1} = {0821374E-A91F-475E-A6F4-049AE720C65C}
+		{0821374E-A91F-475E-A6F4-049AE720C65C} = {8308544E-4C5D-480A-AA85-2FFE8EF83D48}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {017DAD0D-EF80-472F-A606-A3BF7B50FB80}
+	EndGlobalSection
+EndGlobal

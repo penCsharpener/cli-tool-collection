@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-PhotoRenamer.Cli-26db1b43-1dd8-4f60-9363-bcb9657450b7</UserSecretsId>
+    <UserSecretsId>dotnet-PhotoTimeStampShifter.Cli-650A2EE0-30DD-49F1-B47E-627B4F24AEB1</UserSecretsId>
+    <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
@@ -13,10 +14,10 @@
     <PackageReference Include="Microsoft.Management.Infrastructure" Version="2.0.0" />
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.2.6" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\photo-rename-common\src\PhotoRename.Common\PhotoRename.Common.csproj" />
   </ItemGroup>
+
 </Project>

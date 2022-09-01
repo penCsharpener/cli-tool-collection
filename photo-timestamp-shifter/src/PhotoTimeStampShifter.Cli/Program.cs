@@ -1,20 +1,18 @@
-using System.Management.Automation;
+﻿using System.Management.Automation;
 using Cocona;
 using Cocona.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using PhotoRename.Common.Services;
 using PhotoRename.Common.Services.Abstractions;
-using PhotoRenamer.Cli.Models;
-using PhotoRenamer.Cli.Services;
-using PhotoRenamer.Cli.Services.Abstractions;
+using PhotoTimeStampShifter.Cli.Models;
+using PhotoTimeStampShifter.Cli.Services;
+using PhotoTimeStampShifter.Cli.Services.Abstractions;
 using Serilog;
 using Serilog.Events;
 
-namespace PhotoRenamer.Cli;
-
 public static class Program
 {
-    public static void Main(string[] args)
+    private static Task Main(string[] args)
     {
         Console.WriteLine(string.Join(",", args));
 
@@ -32,11 +30,11 @@ public static class Program
                 .AddServices()
                 .Build();
 
-            app.AddCommand(async (RenameParameters options, IRenameService renameService, CoconaAppContext context) =>
+            app.AddCommand(async (RenameParameters options, ITimestampShifterService renameService, CoconaAppContext context) =>
             {
                 var cmdList = new List<string>();
 
-                await foreach (var line in renameService.GetNameCommandsAsync(context.CancellationToken))
+                foreach (var line in renameService.RenameTimeStamp())
                 {
                     Console.WriteLine(line);
 
@@ -73,14 +71,17 @@ public static class Program
         {
             Log.CloseAndFlush();
         }
+
+        return Task.CompletedTask;
     }
 
     public static CoconaAppBuilder AddServices(this CoconaAppBuilder services)
     {
         services.Host.UseSerilog();
-        services.Services.AddTransient<IRenameService, RenameService>();
+        services.Services.AddTransient<ITimestampShifterService, TimestampShifterService>();
         services.Services.AddTransient<IFileService, FileService>();
 
         return services;
     }
 }
+

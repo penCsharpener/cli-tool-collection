@@ -1,7 +1,7 @@
 ﻿using Cocona;
 using PhotoRename.Common.Models;
 
-namespace PhotoRenamer.Cli.Models;
+namespace PhotoTimeStampShifter.Cli.Models;
 
 public class RenameParameters : ICommandParameterSet
 {

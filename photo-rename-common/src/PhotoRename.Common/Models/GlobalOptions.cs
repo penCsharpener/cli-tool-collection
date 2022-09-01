@@ -1,4 +1,5 @@
-﻿namespace PhotoRenamer.Cli.Models;
+﻿namespace PhotoRename.Common.Models;
+
 public static class GlobalOptions
 {
     public static bool OnlyUseFilename { get; set; }
