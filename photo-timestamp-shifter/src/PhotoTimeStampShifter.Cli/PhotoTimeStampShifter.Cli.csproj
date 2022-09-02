@@ -8,7 +8,7 @@
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Cocona" Version="2.0.3" />
     <PackageReference Include="Microsoft.Management.Infrastructure" Version="2.0.0" />

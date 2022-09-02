@@ -12,7 +12,7 @@ using Serilog.Events;
 
 public static class Program
 {
-    private static Task Main(string[] args)
+    public static void Main(string[] args)
     {
         Console.WriteLine(string.Join(",", args));
 
@@ -32,9 +32,14 @@ public static class Program
 
             app.AddCommand(async (RenameParameters options, ITimestampShifterService renameService, CoconaAppContext context) =>
             {
+                if (string.IsNullOrWhiteSpace(options.TimeShiftValue))
+                {
+                    throw new ArgumentException($"{nameof(options.TimeShiftValue)} is required value", nameof(options.TimeShiftValue));
+                }
+
                 var cmdList = new List<string>();
 
-                foreach (var line in renameService.RenameTimeStamp())
+                foreach (var line in renameService.RenameTimeStamp(options.TimeShiftValue))
                 {
                     Console.WriteLine(line);
 
@@ -71,8 +76,6 @@ public static class Program
         {
             Log.CloseAndFlush();
         }
-
-        return Task.CompletedTask;
     }
 
     public static CoconaAppBuilder AddServices(this CoconaAppBuilder services)

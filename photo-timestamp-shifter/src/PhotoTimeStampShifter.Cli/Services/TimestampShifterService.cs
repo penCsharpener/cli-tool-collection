@@ -18,11 +18,11 @@ public class TimestampShifterService : ITimestampShifterService
         _fileService = fileService;
     }
 
-    public IEnumerable<string> RenameTimeStamp()
+    public IEnumerable<string> RenameTimeStamp(string timeShiftValue)
     {
         var files = _fileService.GetFiles(_hostEnvironment.ContentRootPath, null).Where(f => !string.IsNullOrWhiteSpace(f) && FilterFiles(f)).ToList();
 
-        var renamePairs = TimeShiftRenameableFiles(files, TimeSpan.FromHours(-4));
+        var renamePairs = TimeShiftRenameableFiles(files, ParseTimeShiftOption(timeShiftValue));
 
         foreach (var file in renamePairs)
         {
@@ -30,7 +30,7 @@ public class TimestampShifterService : ITimestampShifterService
         }
     }
 
-    private IEnumerable<RenamePair> TimeShiftRenameableFiles(IEnumerable<string> files, TimeSpan shiftBy)
+    private static IEnumerable<RenamePair> TimeShiftRenameableFiles(IEnumerable<string> files, TimeSpan shiftBy)
     {
         foreach (var file in files)
         {
@@ -54,14 +54,22 @@ public class TimestampShifterService : ITimestampShifterService
 
                 yield return new(file, newFileName + fileExtensions);
             }
-            else
-            {
-                //yield return new(file, fileName + fileExtensions);
-            }
         }
     }
 
-    public bool FilterFiles(string file)
+    private TimeSpan ParseTimeShiftOption(string timeShiftValue)
+    {
+        return timeShiftValue switch
+        {
+            [.. var seconds, 's'] => TimeSpan.FromSeconds(int.TryParse(seconds, out var value) ? value : 0),
+            [.. var minutes, 'm'] => TimeSpan.FromMinutes(int.TryParse(minutes, out var value) ? value : 0),
+            [.. var hours, 'h'] => TimeSpan.FromHours(int.TryParse(hours, out var value) ? value : 0),
+            [.. var days, 'd'] => TimeSpan.FromDays(int.TryParse(days, out var value) ? value : 0),
+            _ => throw new ArgumentOutOfRangeException(nameof(timeShiftValue), timeShiftValue, $"Cannot parse parameter")
+        };
+    }
+
+    public static bool FilterFiles(string file)
     {
         return file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
         || file.EndsWith(".webp", StringComparison.OrdinalIgnoreCase)

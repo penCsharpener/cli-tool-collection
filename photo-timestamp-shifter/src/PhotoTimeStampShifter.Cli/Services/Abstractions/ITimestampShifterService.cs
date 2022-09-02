@@ -2,5 +2,5 @@
 
 public interface ITimestampShifterService
 {
-    IEnumerable<string> RenameTimeStamp();
+    IEnumerable<string> RenameTimeStamp(string timeShiftValue);
 }

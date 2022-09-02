@@ -30,4 +30,7 @@ public class RenameParameters : ICommandParameterSet
 
     [Option('x', Description = "Executes the renaming command after printing it. Only supported with powershell.")]
     public bool ExecuteRename { get; set; }
+
+    [Option('s', Description = "The time unit used for shifting timestamp. Ex: -s 10s (10 seconds), -s 15m, -s -4h (-4 hours), -s 6d")]
+    public string? TimeShiftValue { get; set; }
 }
