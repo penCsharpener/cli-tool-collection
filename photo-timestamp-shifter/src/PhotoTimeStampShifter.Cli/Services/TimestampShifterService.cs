@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using PhotoRename.Common.Models;
 using PhotoRename.Common.Services.Abstractions;
+using PhotoTimeStampShifter.Cli.Models;
 using PhotoTimeStampShifter.Cli.Services.Abstractions;
 
 namespace PhotoTimeStampShifter.Cli.Services;
@@ -18,15 +19,17 @@ public class TimestampShifterService : ITimestampShifterService
         _fileService = fileService;
     }
 
-    public IEnumerable<string> RenameTimeStamp(string timeShiftValue)
+    public IEnumerable<string> RenameTimeStamp(RenameParameters options)
     {
         var files = _fileService.GetFiles(_hostEnvironment.ContentRootPath, null).Where(f => !string.IsNullOrWhiteSpace(f) && FilterFiles(f)).ToList();
 
-        var renamePairs = TimeShiftRenameableFiles(files, ParseTimeShiftOption(timeShiftValue));
+        var renamePairs = TimeShiftRenameableFiles(files, ParseTimeShiftOption(options.TimeShiftValue!));
 
         foreach (var file in renamePairs)
         {
-            yield return GlobalOptions.PreferCmd ? file.CmdRenameCommand : file.PowershellRenameCommand;
+            file.ApplyOptions(options.OnlyUseFilename);
+
+            yield return options.PreferCmd ? file.CmdRenameCommand : file.PowershellRenameCommand;
         }
     }
 
@@ -65,6 +68,7 @@ public class TimestampShifterService : ITimestampShifterService
             [.. var minutes, 'm'] => TimeSpan.FromMinutes(int.TryParse(minutes, out var value) ? value : 0),
             [.. var hours, 'h'] => TimeSpan.FromHours(int.TryParse(hours, out var value) ? value : 0),
             [.. var days, 'd'] => TimeSpan.FromDays(int.TryParse(days, out var value) ? value : 0),
+            [.. var t, 't'] => TimeSpan.Parse(t.ToString()),
             _ => throw new ArgumentOutOfRangeException(nameof(timeShiftValue), timeShiftValue, $"Cannot parse parameter")
         };
     }

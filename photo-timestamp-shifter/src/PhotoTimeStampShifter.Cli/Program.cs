@@ -39,7 +39,7 @@ public static class Program
 
                 var cmdList = new List<string>();
 
-                foreach (var line in renameService.RenameTimeStamp(options.TimeShiftValue))
+                foreach (var line in renameService.RenameTimeStamp(options))
                 {
                     Console.WriteLine(line);
 
