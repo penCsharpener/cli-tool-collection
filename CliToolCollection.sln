@@ -39,6 +39,29 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Extensions", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Extensions.Tests", "extensions\tests\PenCsharpener.Extensions.Tests\PenCsharpener.Extensions.Tests.csproj", "{2743BBEA-1B39-4B59-85E6-ED8C240A6CC9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mailing", "Mailing", "{9BB03AC9-9616-44D9-9F3E-108004E5716A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Mailing.Common", "mailing\src\PenCsharpener.Mailing.Common\PenCsharpener.Mailing.Common.csproj", "{F245D564-A0AD-43CE-B94E-2125C036A998}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4698AF5E-7AFA-4C56-B93A-1B2667319FA1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{07D16BA4-0CD6-4AF6-9F24-A79DF44F85A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Mailing.CsvMassMailer", "mailing\src\PenCsharpener.Mailing.CsvMassMailer\PenCsharpener.Mailing.CsvMassMailer.csproj", "{1371FAE9-E0A3-434E-A653-5145CE247E63}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Mailing.Common.Tests", "mailing\tests\PenCsharpener.Mailing.Common.Tests\PenCsharpener.Mailing.Common.Tests.csproj", "{E05F02CA-2E0B-49EE-82D2-EF9FEC6960CC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Mailing.CsvMassMailer.Tests", "mailing\tests\PenCsharpener.Mailing.CsvMassMailer.Tests\PenCsharpener.Mailing.CsvMassMailer.Tests.csproj", "{5FE9FC04-D585-4308-AF55-82E05AB4504B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenCsharpener.Mailing.CsvMassMailer.Application", "mailing\src\PenCsharpener.Mailing.CsvMassMailer.Application\PenCsharpener.Mailing.CsvMassMailer.Application.csproj", "{BAB7E194-DBB3-469F-A391-3C1A0F9355AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenCsharpener.Mailing.CsvMassMailer.Application.Tests", "mailing\tests\PenCsharpener.Mailing.CsvMassMailer.Application.Tests\PenCsharpener.Mailing.CsvMassMailer.Application.Tests.csproj", "{4FE64DF3-28FF-4570-9C03-50555695CE39}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5CDD94F9-37F8-4303-851F-47F7214BB337}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +92,30 @@ Global
 		{2743BBEA-1B39-4B59-85E6-ED8C240A6CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2743BBEA-1B39-4B59-85E6-ED8C240A6CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2743BBEA-1B39-4B59-85E6-ED8C240A6CC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F245D564-A0AD-43CE-B94E-2125C036A998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F245D564-A0AD-43CE-B94E-2125C036A998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F245D564-A0AD-43CE-B94E-2125C036A998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F245D564-A0AD-43CE-B94E-2125C036A998}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1371FAE9-E0A3-434E-A653-5145CE247E63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1371FAE9-E0A3-434E-A653-5145CE247E63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1371FAE9-E0A3-434E-A653-5145CE247E63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1371FAE9-E0A3-434E-A653-5145CE247E63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E05F02CA-2E0B-49EE-82D2-EF9FEC6960CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E05F02CA-2E0B-49EE-82D2-EF9FEC6960CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E05F02CA-2E0B-49EE-82D2-EF9FEC6960CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E05F02CA-2E0B-49EE-82D2-EF9FEC6960CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FE9FC04-D585-4308-AF55-82E05AB4504B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FE9FC04-D585-4308-AF55-82E05AB4504B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FE9FC04-D585-4308-AF55-82E05AB4504B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FE9FC04-D585-4308-AF55-82E05AB4504B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAB7E194-DBB3-469F-A391-3C1A0F9355AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAB7E194-DBB3-469F-A391-3C1A0F9355AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAB7E194-DBB3-469F-A391-3C1A0F9355AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAB7E194-DBB3-469F-A391-3C1A0F9355AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FE64DF3-28FF-4570-9C03-50555695CE39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FE64DF3-28FF-4570-9C03-50555695CE39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FE64DF3-28FF-4570-9C03-50555695CE39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FE64DF3-28FF-4570-9C03-50555695CE39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +135,14 @@ Global
 		{27481F88-BCF1-44DB-9CE6-401FFAE996EB} = {69444F9E-E188-49F3-86C1-4887C55570BB}
 		{F17980B0-B71B-4E98-88AC-08A207B2B198} = {E5A8F80C-2270-4114-A85C-9740792CE35D}
 		{2743BBEA-1B39-4B59-85E6-ED8C240A6CC9} = {27481F88-BCF1-44DB-9CE6-401FFAE996EB}
+		{F245D564-A0AD-43CE-B94E-2125C036A998} = {4698AF5E-7AFA-4C56-B93A-1B2667319FA1}
+		{4698AF5E-7AFA-4C56-B93A-1B2667319FA1} = {9BB03AC9-9616-44D9-9F3E-108004E5716A}
+		{07D16BA4-0CD6-4AF6-9F24-A79DF44F85A2} = {9BB03AC9-9616-44D9-9F3E-108004E5716A}
+		{1371FAE9-E0A3-434E-A653-5145CE247E63} = {4698AF5E-7AFA-4C56-B93A-1B2667319FA1}
+		{E05F02CA-2E0B-49EE-82D2-EF9FEC6960CC} = {07D16BA4-0CD6-4AF6-9F24-A79DF44F85A2}
+		{5FE9FC04-D585-4308-AF55-82E05AB4504B} = {07D16BA4-0CD6-4AF6-9F24-A79DF44F85A2}
+		{BAB7E194-DBB3-469F-A391-3C1A0F9355AD} = {4698AF5E-7AFA-4C56-B93A-1B2667319FA1}
+		{4FE64DF3-28FF-4570-9C03-50555695CE39} = {07D16BA4-0CD6-4AF6-9F24-A79DF44F85A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D1BC50AE-D029-4A80-927D-20D33C6BE78D}

@@ -1,0 +1,5 @@
+Recipient,{{Name}},{{DoB}},multiplier,base price,{{registration fee}},{{currency}}
+john.doe@example.com,John Doe,01.01.1980,3,30,90,€
+jane.doe@example.com,Jane Doe,24.12.2000,5,30,150,€
+terrence.doe@example.com,Terrence Doe,20.04.2015,1,30,30,$
+baby.doe@example.com,Baby Doe,05.08.2022,0,30,0,
