@@ -6,10 +6,10 @@ namespace PenCsharpener.Mailing.Common.Services;
 
 public class SmtpService : ISmtpService
 {
-	private readonly SmtpConfiguration _options;
+    private readonly SmtpConfiguration _options;
 
-	public SmtpService(IOptions<SmtpConfiguration> options)
-	{
-		_options = options.Value;
-	}
+    public SmtpService(IOptions<SmtpConfiguration> options)
+    {
+        _options = options.Value;
+    }
 }

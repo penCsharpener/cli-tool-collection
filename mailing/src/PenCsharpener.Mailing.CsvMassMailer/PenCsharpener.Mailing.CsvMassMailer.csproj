@@ -8,12 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Services\Abstractions\ICsvMassMailerService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Cocona" Version="2.0.3" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
   </ItemGroup>
   
-    <ItemGroup>
-      <ProjectReference Include="..\PenCsharpener.Mailing.Common\PenCsharpener.Mailing.Common.csproj" />
-      <ProjectReference Include="..\PenCsharpener.Mailing.CsvMassMailer.Application\PenCsharpener.Mailing.CsvMassMailer.Application.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PenCsharpener.Mailing.Common\PenCsharpener.Mailing.Common.csproj" />
+    <ProjectReference Include="..\PenCsharpener.Mailing.CsvMassMailer.Application\PenCsharpener.Mailing.CsvMassMailer.Application.csproj" />
+  </ItemGroup>
 
 </Project>

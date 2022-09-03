@@ -31,7 +31,7 @@ public class CsvReader : ICsvReader
         var csvContent = new CsvContent()
         {
             EmailRecipients = dict.Keys.ToArray(),
-            ReplacementTokens = dict
+            ReplacementPairs = dict
         };
 
         return csvContent;

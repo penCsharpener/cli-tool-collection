@@ -1,0 +1,11 @@
+﻿Hi {{Name}},
+
+This is my amazing email template.
+I'm glad you had a look at it.
+Since you were born on the {{DoB}} you need to pay a registration fee of {{registration fee}}{{currency}}.
+
+Thank you attending!
+
+Kind regards,
+
+penCsharpener

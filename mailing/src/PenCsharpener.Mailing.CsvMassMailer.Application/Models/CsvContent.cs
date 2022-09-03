@@ -2,6 +2,6 @@
 
 public class CsvContent
 {
-    public IList<string>? EmailRecipients { get; internal set; }
-    public IDictionary<string, IList<ReplacementPair>>? ReplacementTokens { get; set; }
+    public IList<string> EmailRecipients { get; internal set; } = default!;
+    public IDictionary<string, IList<ReplacementPair>> ReplacementPairs { get; set; } = default!;
 }
