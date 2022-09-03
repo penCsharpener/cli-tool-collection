@@ -5,12 +5,7 @@ namespace PenCsharpener.Mailing.CsvMassMailer.Application.Services;
 
 public class CsvReader : ICsvReader
 {
-    public CsvReader()
-    {
-
-    }
-
-    public CsvContent? ParseCsvContent(string[] csvLines)
+    public CsvContent ParseCsvContent(string[] csvLines)
     {
         var tableCells = GetTableCells(csvLines).ToArray();
 
