@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Hosting;
+using PhotoRename.Common.Models;
 using PhotoRename.Common.Services.Abstractions;
 using PhotoRenamer.Cli.Models;
 using PhotoRenamer.Cli.Services.Abstractions;
@@ -20,13 +21,15 @@ public class RenameService : IRenameService
         _fileService = fileService;
     }
 
-    public async IAsyncEnumerable<string> GetNameCommandsAsync([EnumeratorCancellation] CancellationToken stoppingToken)
+    public async IAsyncEnumerable<string> GetNameCommandsAsync(RenameParameters options, [EnumeratorCancellation] CancellationToken stoppingToken)
     {
         var files = _fileService.GetFiles(_hostEnvironment.ContentRootPath, null).Where(f => !string.IsNullOrWhiteSpace(f) && FilterFiles(f)).ToList();
 
         await foreach (var file in FilterRenameableFiles(files, stoppingToken))
         {
-            yield return GlobalOptions.PreferCmd ? file.CmdRenameCommand : file.PowershellRenameCommand;
+            file.ApplyOptions(options.OnlyUseFilename);
+
+            yield return options.PreferCmd ? file.CmdRenameCommand : file.PowershellRenameCommand;
         }
     }
 

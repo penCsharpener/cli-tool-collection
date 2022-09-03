@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PhotoRenamer.Cli\PhotoRenamer.Cli.csproj" />
+    <ProjectReference Include="..\..\src\PenCsharpener.Extensions\PenCsharpener.Extensions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

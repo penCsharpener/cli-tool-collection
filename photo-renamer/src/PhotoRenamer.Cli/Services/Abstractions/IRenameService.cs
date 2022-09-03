@@ -1,5 +1,7 @@
-﻿namespace PhotoRenamer.Cli.Services.Abstractions;
+﻿using PhotoRenamer.Cli.Models;
+
+namespace PhotoRenamer.Cli.Services.Abstractions;
 public interface IRenameService
 {
-    IAsyncEnumerable<string> GetNameCommandsAsync(CancellationToken stoppingToken = default);
+    IAsyncEnumerable<string> GetNameCommandsAsync(RenameParameters options, CancellationToken stoppingToken = default);
 }

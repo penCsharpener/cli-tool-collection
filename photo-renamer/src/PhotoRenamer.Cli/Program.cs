@@ -36,7 +36,7 @@ public static class Program
             {
                 var cmdList = new List<string>();
 
-                await foreach (var line in renameService.GetNameCommandsAsync(context.CancellationToken))
+                await foreach (var line in renameService.GetNameCommandsAsync(options, context.CancellationToken))
                 {
                     Console.WriteLine(line);
 
