@@ -19,12 +19,12 @@ public class CsvMassMailerService : ICsvMassMailerService
 
     public async Task ExecuteAsync(CoconaOptions options, CancellationToken cancellationToken = default)
     {
-        var csvLines = await _fileService.ReadAllLinesOfCsvAsync();
-        var template = await _fileService.ReadTemplateAsync();
+        var csvLines = await _fileService.ReadAllLinesOfCsvAsync(cancellationToken);
+        var template = await _fileService.ReadTemplateAsync(cancellationToken);
 
-        var csvContent = _csvReader.ParseCsvContent(csvLines);
+        var csvContent = _csvReader.ParseCsvContent(csvLines, options.CsvDelimiter);
         var emailTexts = _replacementService.GenerateEmails(template, csvContent);
 
-        await _fileService.WriteEmailsAsync(emailTexts.ToArray());
+        await _fileService.WriteEmailsAsync(emailTexts.ToArray(), cancellationToken);
     }
 }

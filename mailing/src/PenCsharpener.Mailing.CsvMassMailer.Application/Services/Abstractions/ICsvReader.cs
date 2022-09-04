@@ -4,5 +4,5 @@ namespace PenCsharpener.Mailing.CsvMassMailer.Application.Services.Abstractions;
 
 public interface ICsvReader
 {
-    CsvContent ParseCsvContent(string[] csvLines);
+    CsvContent ParseCsvContent(string[] csvLines, string csvDelimiter);
 }

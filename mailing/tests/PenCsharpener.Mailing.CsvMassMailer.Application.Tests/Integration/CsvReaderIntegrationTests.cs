@@ -21,7 +21,7 @@ public class CsvReaderIntegrationTests
 
         fileContent.Should().NotBeNull();
 
-        var csvContent = _csvReader.ParseCsvContent(fileContent);
+        var csvContent = _csvReader.ParseCsvContent(fileContent, ",");
 
         const string johnDoe = "john.doe@example.com";
         const string babyDoe = "baby.doe@example.com";

@@ -21,11 +21,13 @@ public class EmailReplacementServiceTests
     [Fact]
     public async Task Services_Prepare_Email_Bodies_And_Save_Emails_As_Text_Files()
     {
-        var fileContent = await _fileSystem.File.ReadAllLinesAsync("Integration/CsvMassMailer.Tests.csv");
+        var fileContent = await _fileService.ReadAllLinesOfCsvAsync();
+        //var fileContent = await _fileSystem.File.ReadAllLinesAsync("Integration/CsvMassMailer.Tests.csv");
         fileContent.Should().NotBeNull();
 
-        var csvContent = _csvReader.ParseCsvContent(fileContent);
-        var template = await _fileSystem.File.ReadAllTextAsync("Integration/email-template.txt");
+        var csvContent = _csvReader.ParseCsvContent(fileContent, ",");
+        //var template = await _fileSystem.File.ReadAllTextAsync("Integration/email-template.txt");
+        var template = await _fileService.ReadTemplateAsync();
 
         var emails = _testObject.GenerateEmails(template, csvContent);
 

@@ -7,16 +7,13 @@ namespace PenCsharpener.Mailing.CsvMassMailer.Application.Tests;
 
 public class Startup
 {
+    public void ConfigureHost(IHostBuilder hostBuilder)
+    {
+        hostBuilder.UseContentRoot(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Integration");
+    }
+
     public void ConfigureServices(IServiceCollection services)
     {
         services.RegisterApplicationServices();
-        services.AddTransient(_ =>
-        {
-            var proxy = Substitute.For<IHostEnvironment>();
-
-            proxy.ContentRootPath.Returns(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-
-            return proxy;
-        });
     }
 }

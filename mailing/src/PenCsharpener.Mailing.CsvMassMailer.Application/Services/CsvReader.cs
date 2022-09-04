@@ -5,9 +5,9 @@ namespace PenCsharpener.Mailing.CsvMassMailer.Application.Services;
 
 public class CsvReader : ICsvReader
 {
-    public CsvContent ParseCsvContent(string[] csvLines)
+    public CsvContent ParseCsvContent(string[] csvLines, string csvDelimiter)
     {
-        var tableCells = GetTableCells(csvLines).ToArray();
+        var tableCells = GetTableCells(csvLines, csvDelimiter).ToArray();
 
         var replacementColumns = tableCells.Where(tc => tc.IsHeaderCell && tc.Value.StartsWith("{{") && tc.Value.EndsWith("}}")).ToArray();
         var replacementColumnNumbers = replacementColumns.Select(rc => rc.ColumnIndex).ToArray();
@@ -37,11 +37,11 @@ public class CsvReader : ICsvReader
         return csvContent;
     }
 
-    private IEnumerable<TableCell<string>> GetTableCells(string[] csvLines)
+    private IEnumerable<TableCell<string>> GetTableCells(string[] csvLines, string csvDelimiter)
     {
         for (var rowIndex = 0; rowIndex < csvLines.Length; rowIndex++)
         {
-            var columnsCells = csvLines[rowIndex].Split(',').ToArray();
+            var columnsCells = csvLines[rowIndex].Split(csvDelimiter).ToArray();
 
             for (var columnIndex = 0; columnIndex < columnsCells.Length; columnIndex++)
             {
