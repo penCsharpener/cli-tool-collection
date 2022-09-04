@@ -4,11 +4,12 @@ namespace PenCsharpener.Mailing.CsvMassMailer.Models;
 public class CoconaOptions : ICommandParameterSet
 {
     [Option("send", Description = "Additionally to printing the email text also send them out directly using smtp settings.")]
-    public bool SendEmails { get; set; }
+    [HasDefaultValue]
+    public bool SendEmails { get; set; } = false;
 
     [Option("d", Description = "Character used to separate columns in csv file.")]
     [HasDefaultValue]
-    public string CsvDelimiter { get; set; } = ",";
+    public string CsvDelimiter { get; set; } = "\",\"";
 
     [Option("host", Description = "Smtp server host.")]
     [HasDefaultValue]

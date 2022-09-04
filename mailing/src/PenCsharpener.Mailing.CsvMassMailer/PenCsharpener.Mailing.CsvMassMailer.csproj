@@ -14,7 +14,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\PenCsharpener.Mailing.Common\PenCsharpener.Mailing.Common.csproj" />
-    <ProjectReference Include="..\PenCsharpener.Mailing.CsvMassMailer.Application\PenCsharpener.Mailing.CsvMassMailer.Application.csproj" />
+    <ProjectReference Include="..\PenCsharpener.Mailing.CsvMassMailer.Infrastructure\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

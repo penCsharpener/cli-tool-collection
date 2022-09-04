@@ -1,7 +1,7 @@
 ﻿using System.IO.Abstractions;
 using PenCsharpener.Mailing.CsvMassMailer.Application.Services.Abstractions;
 
-namespace PenCsharpener.Mailing.CsvMassMailer.Application.Tests.Integration;
+namespace PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests.Integration;
 
 public class EmailReplacementServiceTests
 {

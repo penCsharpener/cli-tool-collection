@@ -10,7 +10,6 @@ public static class ServiceCollectionExtensions
     public static void RegisterApplicationServices(this IServiceCollection services)
     {
         services.AddTransient<ICsvReader, CsvReader>();
-        services.AddTransient<IFileService, FileService>();
         services.AddTransient<IEmailReplacementService, EmailReplacementService>();
         services.AddTransient<IFileSystem, FileSystem>();
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PenCsharpener.Mailing.CsvMassMailer.Application.Extensions;
+using PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Extensions;
 using PenCsharpener.Mailing.CsvMassMailer.Services;
 using PenCsharpener.Mailing.CsvMassMailer.Services.Abstractions;
 

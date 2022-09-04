@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -11,9 +11,11 @@
   <ItemGroup>
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="FluentAssertions" Version="6.7.0" />
     <PackageReference Include="NSubstitute" Version="4.4.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="Xunit.DependencyInjection" Version="8.5.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -25,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PenCsharpener.Mailing.CsvMassMailer.Application\PenCsharpener.Mailing.CsvMassMailer.Application.csproj" />
+    <ProjectReference Include="..\..\src\PenCsharpener.Mailing.CsvMassMailer.Infrastructure\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,5 +35,14 @@
     <Using Include="FluentAssertions" />
     <Using Include="NSubstitute" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <None Update="Integration\CsvMassMailer.Tests.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Integration\email-template.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

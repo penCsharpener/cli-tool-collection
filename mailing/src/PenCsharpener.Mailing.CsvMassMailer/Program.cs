@@ -2,6 +2,7 @@
 using Cocona.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using PenCsharpener.Mailing.CsvMassMailer.Application.Extensions;
+using PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Extensions;
 using PenCsharpener.Mailing.CsvMassMailer.Models;
 using PenCsharpener.Mailing.CsvMassMailer.Services;
 using PenCsharpener.Mailing.CsvMassMailer.Services.Abstractions;
@@ -26,7 +27,7 @@ public static class Program
         {
             Log.Information("Starting console app");
 
-            var app = CoconaApp.CreateBuilder()
+            var app = CoconaApp.CreateBuilder(args, ConfigureCocona)
                 .AddServices()
                 .Build();
 
@@ -51,8 +52,14 @@ public static class Program
     {
         services.Host.UseSerilog();
         services.Services.RegisterApplicationServices();
+        services.Services.RegisterInfrastructureServices();
         services.Services.AddTransient<ICsvMassMailerService, CsvMassMailerService>();
 
         return services;
+    }
+
+    public static void ConfigureCocona(CoconaAppOptions options)
+    {
+        options.EnableShellCompletionSupport = true;
     }
 }

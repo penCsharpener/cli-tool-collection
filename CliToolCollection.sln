@@ -53,14 +53,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Mailing.Commo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Mailing.CsvMassMailer.Tests", "mailing\tests\PenCsharpener.Mailing.CsvMassMailer.Tests\PenCsharpener.Mailing.CsvMassMailer.Tests.csproj", "{5FE9FC04-D585-4308-AF55-82E05AB4504B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenCsharpener.Mailing.CsvMassMailer.Application", "mailing\src\PenCsharpener.Mailing.CsvMassMailer.Application\PenCsharpener.Mailing.CsvMassMailer.Application.csproj", "{BAB7E194-DBB3-469F-A391-3C1A0F9355AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Mailing.CsvMassMailer.Application", "mailing\src\PenCsharpener.Mailing.CsvMassMailer.Application\PenCsharpener.Mailing.CsvMassMailer.Application.csproj", "{BAB7E194-DBB3-469F-A391-3C1A0F9355AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenCsharpener.Mailing.CsvMassMailer.Application.Tests", "mailing\tests\PenCsharpener.Mailing.CsvMassMailer.Application.Tests\PenCsharpener.Mailing.CsvMassMailer.Application.Tests.csproj", "{4FE64DF3-28FF-4570-9C03-50555695CE39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Mailing.CsvMassMailer.Application.Tests", "mailing\tests\PenCsharpener.Mailing.CsvMassMailer.Application.Tests\PenCsharpener.Mailing.CsvMassMailer.Application.Tests.csproj", "{4FE64DF3-28FF-4570-9C03-50555695CE39}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5CDD94F9-37F8-4303-851F-47F7214BB337}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenCsharpener.Mailing.CsvMassMailer.Infrastructure", "mailing\src\PenCsharpener.Mailing.CsvMassMailer.Infrastructure\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.csproj", "{D70FDA05-1AD9-43B5-95BD-BEAFEB8E13A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests", "mailing\tests\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests.csproj", "{C6C8417F-755D-465D-99B2-E10F74BE78AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +120,14 @@ Global
 		{4FE64DF3-28FF-4570-9C03-50555695CE39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FE64DF3-28FF-4570-9C03-50555695CE39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FE64DF3-28FF-4570-9C03-50555695CE39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D70FDA05-1AD9-43B5-95BD-BEAFEB8E13A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D70FDA05-1AD9-43B5-95BD-BEAFEB8E13A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D70FDA05-1AD9-43B5-95BD-BEAFEB8E13A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D70FDA05-1AD9-43B5-95BD-BEAFEB8E13A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6C8417F-755D-465D-99B2-E10F74BE78AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6C8417F-755D-465D-99B2-E10F74BE78AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6C8417F-755D-465D-99B2-E10F74BE78AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6C8417F-755D-465D-99B2-E10F74BE78AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +155,8 @@ Global
 		{5FE9FC04-D585-4308-AF55-82E05AB4504B} = {07D16BA4-0CD6-4AF6-9F24-A79DF44F85A2}
 		{BAB7E194-DBB3-469F-A391-3C1A0F9355AD} = {4698AF5E-7AFA-4C56-B93A-1B2667319FA1}
 		{4FE64DF3-28FF-4570-9C03-50555695CE39} = {07D16BA4-0CD6-4AF6-9F24-A79DF44F85A2}
+		{D70FDA05-1AD9-43B5-95BD-BEAFEB8E13A5} = {4698AF5E-7AFA-4C56-B93A-1B2667319FA1}
+		{C6C8417F-755D-465D-99B2-E10F74BE78AD} = {07D16BA4-0CD6-4AF6-9F24-A79DF44F85A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D1BC50AE-D029-4A80-927D-20D33C6BE78D}
