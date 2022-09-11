@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PenCsharpener.Mailing.CsvMassMailer": {
+      "commandName": "Project",
+      "commandLineArgs": "--host=localhost --port=465 --username=me@matthias--mueller.de --sender-name=me@matthias--mueller.de --sender-address=me@matthias--mueller.de --password=123p"
+    }
+  }
+}

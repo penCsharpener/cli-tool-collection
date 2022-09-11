@@ -1,29 +1,36 @@
 ﻿using Cocona;
 
 namespace PenCsharpener.Mailing.CsvMassMailer.Models;
+
 public class CoconaOptions : ICommandParameterSet
 {
-    [Option("send", Description = "Additionally to printing the email text also send them out directly using smtp settings.")]
+    [Option('m', Description = "Additionally to printing the email text also send them out directly using smtp settings.")]
     [HasDefaultValue]
     public bool SendEmails { get; set; } = false;
 
-    [Option("d", Description = "Character used to separate columns in csv file.")]
+    [Option('d', Description = "Character used to separate columns in csv file.")]
     [HasDefaultValue]
     public string CsvDelimiter { get; set; } = "\",\"";
 
-    [Option("host", Description = "Smtp server host.")]
+    [Option('h', Description = "Smtp server host.")]
     [HasDefaultValue]
-    public bool SmtpHost { get; set; }
+    public string SmtpHost { get; set; } = default!;
 
-    [Option("port", Description = "Smtp server port.")]
+    [Option('p', Description = "Smtp server port.")]
     [HasDefaultValue]
     public int SmtpPort { get; set; }
 
-    [Option("username", Description = "Smtp server username.")]
+    [Option('u', Description = "Smtp server username.")]
     [HasDefaultValue]
-    public bool SmtpUsername { get; set; }
+    public string SmtpUsername { get; set; } = default!;
 
-    [Option("password", Description = "Smtp server password.")]
+    [Option('n', Description = "Smtp sender full name.")]
+    public string SmtpSenderName { get; set; } = default!;
+
+    [Option('a', Description = "Smtp sender address.")]
+    public string SmtpSenderAddress { get; set; } = default!;
+
+    [Option('s', Description = "Smtp server password.")]
     [HasDefaultValue]
-    public bool SmtpPassword { get; set; }
+    public string SmtpPassword { get; set; } = default!;
 }

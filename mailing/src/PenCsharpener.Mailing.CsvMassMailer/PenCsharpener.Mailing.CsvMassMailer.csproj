@@ -13,6 +13,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\..\..\extensions\src\PenCsharpener.Extensions\PenCsharpener.Extensions.csproj" />
     <ProjectReference Include="..\PenCsharpener.Mailing.Common\PenCsharpener.Mailing.Common.csproj" />
     <ProjectReference Include="..\PenCsharpener.Mailing.CsvMassMailer.Infrastructure\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.csproj" />
   </ItemGroup>

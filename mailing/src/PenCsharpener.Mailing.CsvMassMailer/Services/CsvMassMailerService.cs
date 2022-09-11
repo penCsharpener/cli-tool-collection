@@ -26,7 +26,7 @@ public class CsvMassMailerService : ICsvMassMailerService
         var template = await _fileService.ReadTemplateAsync(cancellationToken);
 
         var csvContent = _csvReader.ParseCsvContent(csvLines, options.CsvDelimiter);
-        var emailTexts = _replacementService.GenerateEmails(template, csvContent);
+        var emailTexts = _replacementService.GenerateEmails(template.Body, csvContent);
 
         await _fileService.WriteEmailsAsync(emailTexts.ToArray(), cancellationToken);
 
@@ -34,7 +34,7 @@ public class CsvMassMailerService : ICsvMassMailerService
         {
             foreach (var mail in emailTexts)
             {
-                await _smtpService.SendEmailAsync(mail.Recipient, mail.Recipient, "filename of template file", mail.EmailBody, cancellationToken);
+                await _smtpService.SendEmailAsync(mail.Recipient, mail.Recipient, template.Subject, mail.EmailBody, cancellationToken);
             }
         }
     }

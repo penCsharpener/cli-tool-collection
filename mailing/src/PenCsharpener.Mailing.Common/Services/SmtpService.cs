@@ -60,3 +60,11 @@ public class SmtpService : ISmtpService
         };
     }
 }
+
+public class NullSmtpService : ISmtpService
+{
+    public Task SendEmailAsync(string recipientName, string recipientAddress, string subject, string emailBody, CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
+}

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using PenCsharpener.Mailing.CsvMassMailer.Application.Models;
 using PenCsharpener.Mailing.CsvMassMailer.Application.Services.Abstractions;
 
-namespace PenCsharpener.Mailing.CsvMassMailer.Application.Services;
+namespace PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Services;
 
 public class FileService : IFileService
 {
@@ -23,11 +23,14 @@ public class FileService : IFileService
         return await _fileSystem.File.ReadAllLinesAsync(filePath, cancellationToken);
     }
 
-    public async Task<string> ReadTemplateAsync(CancellationToken cancellationToken = default)
+    public async Task<EmailTemplate> ReadTemplateAsync(CancellationToken cancellationToken = default)
     {
-        var filePath = _fileSystem.Directory.GetFiles(_hostEnvironment.ContentRootPath, "*.txt").First();
+        var filePath = _fileSystem.Directory.GetFiles(_hostEnvironment.ContentRootPath, "*.txt").Where(f => !Path.GetFileName(f).Contains('@')).First();
 
-        return await _fileSystem.File.ReadAllTextAsync(filePath, cancellationToken);
+        var fileName = Path.GetFileNameWithoutExtension(filePath);
+        var templateContent = await _fileSystem.File.ReadAllTextAsync(filePath, cancellationToken);
+
+        return new EmailTemplate(fileName, templateContent);
     }
 
     public async Task WriteEmailsAsync(EmailText[] emails, CancellationToken cancellationToken = default)

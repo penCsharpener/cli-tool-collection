@@ -1,7 +1,11 @@
 ﻿using Cocona;
 using Cocona.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using PenCsharpener.Mailing.Common.Services;
+using PenCsharpener.Mailing.Common.Services.Abstractions;
 using PenCsharpener.Mailing.CsvMassMailer.Application.Extensions;
+using PenCsharpener.Mailing.CsvMassMailer.Extensions;
 using PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Extensions;
 using PenCsharpener.Mailing.CsvMassMailer.Models;
 using PenCsharpener.Mailing.CsvMassMailer.Services;
@@ -28,13 +32,15 @@ public static class Program
             Log.Information("Starting console app");
 
             var app = CoconaApp.CreateBuilder(args, ConfigureCocona)
-                .AddServices()
+                .AddServices(args)
                 .Build();
 
             app.AddCommand(async (CoconaOptions options, ICsvMassMailerService service, CoconaAppContext context) =>
             {
                 await service.ExecuteAsync(options);
             });
+
+            app.Services.GetRequiredService<ISmtpService>().SendEmailAsync("", "", "", "");
 
             app.Run();
         }
@@ -48,11 +54,18 @@ public static class Program
         }
     }
 
-    public static CoconaAppBuilder AddServices(this CoconaAppBuilder services)
+    public static CoconaAppBuilder AddServices(this CoconaAppBuilder services, string[]? args)
     {
         services.Host.UseSerilog();
         services.Services.RegisterApplicationServices();
         services.Services.RegisterInfrastructureServices();
+
+        services.Services.AddTransient<ISmtpService>(sp =>
+        {
+            return args.ParseSmtpConfiguration() is { } smtpConfig
+                ? new SmtpService(Options.Create(smtpConfig), sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<SmtpService>>())
+                : new NullSmtpService();
+        });
         services.Services.AddTransient<ICsvMassMailerService, CsvMassMailerService>();
 
         return services;
