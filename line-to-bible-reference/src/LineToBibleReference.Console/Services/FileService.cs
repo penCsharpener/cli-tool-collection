@@ -14,6 +14,11 @@ public class FileService : IFileService
 
     public async IAsyncEnumerable<string> ReadByLineAsync(string filePath)
     {
+        if (!File.Exists(filePath))
+        {
+            yield break;
+        }
+
         using var stream = File.OpenRead(filePath);
         using var reader = new StreamReader(stream, Encoding.UTF8, true, 4096);
 

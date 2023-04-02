@@ -1,25 +1,22 @@
 ﻿using LineToBibleReference.Console.Abstractions;
-using LineToBibleReference.Console.Models;
 
 namespace LineToBibleReference.Console.Services;
 
 public class DataConverterFactory : IDataConverterFactory
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly AppSettings _settings;
 
-    public DataConverterFactory(IServiceScopeFactory scopeFactory, AppSettings settings)
+    public DataConverterFactory(IServiceScopeFactory scopeFactory)
     {
         _scopeFactory = scopeFactory;
-        _settings = settings;
     }
 
-    public ITextToDataConverter GetDataConverter()
+    public ITextToDataConverter GetDataConverter(string converterType)
     {
         using var scope = _scopeFactory.CreateScope();
         var serviceProvider = scope.ServiceProvider;
 
-        return _settings.SelectedRegexPattern switch
+        return converterType switch
         {
             "de" => serviceProvider.GetRequiredService<GermanTextToDataConverter>(),
             "heb" => serviceProvider.GetRequiredService<HebrewTextToDataConverter>(),

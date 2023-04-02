@@ -2,5 +2,5 @@
 
 public interface IDataConverterFactory
 {
-    ITextToDataConverter GetDataConverter();
+    ITextToDataConverter GetDataConverter(string converterType);
 }
