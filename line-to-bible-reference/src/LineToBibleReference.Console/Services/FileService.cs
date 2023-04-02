@@ -12,15 +12,18 @@ public class FileService : IFileService
         _settings = settings;
     }
 
-    public async IAsyncEnumerable<string> ReadByLineAsync()
+    public async IAsyncEnumerable<string> ReadByLineAsync(string filePath)
     {
-        using var stream = File.OpenRead(_settings.PathToTextFile);
+        using var stream = File.OpenRead(filePath);
         using var reader = new StreamReader(stream, Encoding.UTF8, true, 4096);
 
         string? line;
         while ((line = await reader.ReadLineAsync()) != null)
         {
-            yield return line;
+            if (!string.IsNullOrWhiteSpace(line))
+            {
+                yield return line;
+            }
         }
     }
 }

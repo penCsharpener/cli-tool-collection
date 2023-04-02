@@ -1,5 +1,5 @@
 ﻿namespace LineToBibleReference.Console.Abstractions;
 public interface IFileService
 {
-    IAsyncEnumerable<string> ReadByLineAsync();
+    IAsyncEnumerable<string> ReadByLineAsync(string filePath);
 }

@@ -1,5 +1,8 @@
 ﻿namespace LineToBibleReference.Console.Models;
 public class AppSettings
 {
-    public string PathToTextFile { get; set; } = default!;
+    public string PathToGermanTextFile { get; set; } = default!;
+    public string PathToHebrewTextFile { get; set; } = default!;
+    public string PathToGreekTextFile { get; set; } = default!;
+    public string SelectedRegexPattern { get; set; } = default!;
 }
