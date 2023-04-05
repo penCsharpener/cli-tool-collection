@@ -29,13 +29,15 @@ public class GermanTextToDataConverter : ITextToDataConverter
             chapter = string.IsNullOrWhiteSpace(match.Groups[3].Value) ? chapter : int.Parse(match.Groups[3].Value.Trim(':'));
             verse = string.IsNullOrWhiteSpace(match.Groups[4].Value) ? verse : int.Parse(match.Groups[4].Value);
             var text = match.Groups[6].Value;
+            var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
             yield return new BibleReferenceModel
             {
                 BookAbbreviation = bookName.Trim(),
                 Chapter = chapter,
                 Verse = verse,
-                Text = text
+                Text = text,
+                Words = words
             };
         }
     }

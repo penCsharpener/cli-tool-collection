@@ -29,11 +29,21 @@ public class FileService : IFileService
             {
                 yield break;
             }
-                
+
             if (!string.IsNullOrWhiteSpace(line))
             {
                 yield return line;
             }
         }
+    }
+
+    public async Task WriteAllTextToFileAsync(string filePath, string fileContent, CancellationToken cancellationToken = default)
+    {
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+
+        await File.WriteAllTextAsync(filePath, fileContent, cancellationToken);
     }
 }

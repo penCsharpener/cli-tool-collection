@@ -35,13 +35,15 @@ public class HebrewTextToDataConverter : ITextToDataConverter
             chapter = string.IsNullOrWhiteSpace(match.Groups[1].Value) ? chapter : int.Parse(match.Groups[1].Value.Trim());
             verse = string.IsNullOrWhiteSpace(match.Groups[2].Value) ? verse : int.Parse(match.Groups[2].Value);
             var text = match.Groups[4].Value;
+            var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
             yield return new BibleReferenceModel
             {
                 BookAbbreviation = bookName.Trim(),
                 Chapter = chapter,
                 Verse = verse,
-                Text = text
+                Text = text,
+                Words = words
             };
         }
     }

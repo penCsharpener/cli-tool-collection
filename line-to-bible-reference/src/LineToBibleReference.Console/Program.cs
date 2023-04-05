@@ -26,6 +26,7 @@ public class Program
         services.AddSingleton(settings);
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IDataConverterFactory, DataConverterFactory>();
+        services.AddSingleton<ICharacterStatistics, CharacterStatistics>();
         services.AddScoped<GermanTextToDataConverter>();
         services.AddScoped<HebrewTextToDataConverter>();
         services.AddScoped<GreekTextToDataConverter>();
