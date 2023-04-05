@@ -12,7 +12,7 @@ public class FileService : IFileService
         _settings = settings;
     }
 
-    public async IAsyncEnumerable<string> ReadByLineAsync(string filePath)
+    public async IAsyncEnumerable<string> ReadByLineAsync(string filePath, CancellationToken cancellationToken = default)
     {
         if (!File.Exists(filePath))
         {
@@ -25,6 +25,11 @@ public class FileService : IFileService
         string? line;
         while ((line = await reader.ReadLineAsync()) != null)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                yield break;
+            }
+                
             if (!string.IsNullOrWhiteSpace(line))
             {
                 yield return line;
