@@ -11,4 +11,5 @@ public enum CharacterTypes
     Space = 32,
     Quotation = 64,
     Parentheses = 128,
+    FinalOnly = 256,
 }
