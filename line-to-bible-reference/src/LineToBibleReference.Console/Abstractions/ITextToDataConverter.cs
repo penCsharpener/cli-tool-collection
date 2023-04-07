@@ -3,5 +3,5 @@
 namespace LineToBibleReference.Console.Abstractions;
 public interface ITextToDataConverter
 {
-    IAsyncEnumerable<BibleReferenceModel> ConvertToBibleReferences();
+    IAsyncEnumerable<BibleVerseModel> ConvertToBibleReferences();
 }

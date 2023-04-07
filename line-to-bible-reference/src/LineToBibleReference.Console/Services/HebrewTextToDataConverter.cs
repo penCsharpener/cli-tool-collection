@@ -16,7 +16,7 @@ public class HebrewTextToDataConverter : ITextToDataConverter
         _settings = settings;
     }
 
-    public async IAsyncEnumerable<BibleReferenceModel> ConvertToBibleReferences()
+    public async IAsyncEnumerable<BibleVerseModel> ConvertToBibleReferences()
     {
         var bookName = string.Empty;
         var chapter = 1;
@@ -26,7 +26,7 @@ public class HebrewTextToDataConverter : ITextToDataConverter
         {
             if (!string.IsNullOrWhiteSpace(line) && !line.Contains("       "))
             {
-                bookName = line;
+                bookName = line.Trim();
 
                 continue;
             }
@@ -36,10 +36,19 @@ public class HebrewTextToDataConverter : ITextToDataConverter
             verse = string.IsNullOrWhiteSpace(match.Groups[2].Value) ? verse : int.Parse(match.Groups[2].Value);
             var text = match.Groups[4].Value;
             var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-            yield return new BibleReferenceModel
+            var bibleBook = Constants.BibleBooks.First(bb => bb.AlternativeNames.Contains(bookName) || bb.Name == bookName);
+            var bibleReference = new BibleReference
             {
-                BookAbbreviation = bookName.Trim(),
+                BookId = bibleBook.Id,
+                Chapter = chapter,
+                Name = bibleBook.Name,
+                Verse = verse
+            };
+
+            yield return new BibleVerseModel
+            {
+                BookAbbreviation = bookName,
+                BibleReference = bibleReference,
                 Chapter = chapter,
                 Verse = verse,
                 Text = text,

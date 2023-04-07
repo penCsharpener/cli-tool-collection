@@ -4,9 +4,9 @@ using LineToBibleReference.Console.Models;
 
 namespace LineToBibleReference.Console.Services;
 
-public class CharacterStatistics : ICharacterStatistics
+public sealed class CharacterStatistics : ICharacterStatistics
 {
-    public Dictionary<char, int> GetLanguageStatistics(IEnumerable<BibleReferenceModel> bibleReferences)
+    public Dictionary<char, int> GetLanguageStatistics(IEnumerable<BibleVerseModel> bibleReferences)
     {
         var dict = new Dictionary<char, int>();
 

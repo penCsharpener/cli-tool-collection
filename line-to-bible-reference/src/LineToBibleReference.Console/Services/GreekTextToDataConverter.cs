@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Immutable;
+using System.Text.RegularExpressions;
 using LineToBibleReference.Console.Abstractions;
 using LineToBibleReference.Console.Models;
 
@@ -16,7 +17,7 @@ public class GreekTextToDataConverter : ITextToDataConverter
         _settings = settings;
     }
 
-    public async IAsyncEnumerable<BibleReferenceModel> ConvertToBibleReferences()
+    public async IAsyncEnumerable<BibleVerseModel> ConvertToBibleReferences()
     {
         var bookName = string.Empty;
         var chapter = 1;
@@ -25,15 +26,24 @@ public class GreekTextToDataConverter : ITextToDataConverter
         await foreach (var line in _fileService.ReadByLineAsync(_settings.PathToGreekTextFile))
         {
             var match = _regex.Match(line);
-            bookName = string.IsNullOrWhiteSpace(match.Groups[2].Value) ? bookName : match.Groups[2].Value;
+            bookName = string.IsNullOrWhiteSpace(match.Groups[2].Value) ? bookName : match.Groups[2].Value.Trim();
             chapter = string.IsNullOrWhiteSpace(match.Groups[3].Value) ? chapter : int.Parse(match.Groups[3].Value.Trim(':'));
             verse = string.IsNullOrWhiteSpace(match.Groups[4].Value) ? verse : int.Parse(match.Groups[4].Value);
             var text = match.Groups[6].Value;
             var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-            yield return new BibleReferenceModel
+            var bibleBook = Constants.BibleBooks.First(bb => bb.AlternativeNames.Contains(bookName) || bb.Name == bookName);
+            var bibleReference = new BibleReference
             {
-                BookAbbreviation = bookName.Trim(),
+                BookId = bibleBook.Id,
+                Chapter = chapter,
+                Name = bibleBook.Name,
+                Verse = verse
+            };
+
+            yield return new BibleVerseModel
+            {
+                BookAbbreviation = bookName,
+                BibleReference = bibleReference,
                 Chapter = chapter,
                 Verse = verse,
                 Text = text.Trim(),

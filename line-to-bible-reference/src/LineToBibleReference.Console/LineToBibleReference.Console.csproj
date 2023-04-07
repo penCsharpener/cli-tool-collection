@@ -8,6 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="de-books" />
+    <None Remove="de-books.txt" />
+    <None Remove="gr-books" />
+    <None Remove="gr-books.txt" />
+    <None Remove="heb-books" />
+    <None Remove="heb-books.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
