@@ -2,7 +2,7 @@
 
 namespace LineToBibleReference.Console.Services;
 
-public class DataConverterFactory : IDataConverterFactory
+public sealed class DataConverterFactory : IDataConverterFactory
 {
     private readonly IServiceScopeFactory _scopeFactory;
 

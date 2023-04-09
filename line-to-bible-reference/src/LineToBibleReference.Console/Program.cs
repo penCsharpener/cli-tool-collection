@@ -26,11 +26,15 @@ public class Program
         services.AddSingleton(settings);
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IDataConverterFactory, DataConverterFactory>();
+        services.AddSingleton<IDiacriticRemovalServiceFactory, DiacriticRemovalServiceFactory>();
         services.AddSingleton<ICharacterStatistics, CharacterStatistics>();
         services.AddSingleton<IWordStatistics, WordStatistics>();
         services.AddScoped<GermanTextToDataConverter>();
         services.AddScoped<HebrewTextToDataConverter>();
         services.AddScoped<GreekTextToDataConverter>();
+        services.AddScoped<GermanDiacriticRemovalService>();
+        services.AddScoped<HebrewDiacriticRemovalService>();
+        services.AddScoped<GreekDiacriticRemovalService>();
         services.AddHostedService<Worker>();
     }
 }

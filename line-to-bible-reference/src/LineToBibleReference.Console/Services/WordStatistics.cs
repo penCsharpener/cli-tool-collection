@@ -6,8 +6,16 @@ namespace LineToBibleReference.Console.Services;
 
 public sealed class WordStatistics : IWordStatistics
 {
-    public IEnumerable<WordStatsItem> GetBibleWordStats(List<BibleVerseModel> bibleVerseModels)
+    private readonly IDiacriticRemovalServiceFactory _diacriticRemovalFactory;
+
+    public WordStatistics(IDiacriticRemovalServiceFactory diacriticRemovalFactory)
     {
+        _diacriticRemovalFactory = diacriticRemovalFactory;
+    }
+
+    public IEnumerable<WordStatsItem> GetBibleWordStats(string converterType, List<BibleVerseModel> bibleVerseModels)
+    {
+        var diacriticsRemovalService = _diacriticRemovalFactory.GetDiacriticRemovalService(converterType);
         var dict = new Dictionary<string, WordStatsItem>();
 
         foreach (var model in bibleVerseModels)
@@ -17,7 +25,7 @@ public sealed class WordStatistics : IWordStatistics
                 continue;
             }
 
-            foreach (var word in model.Words)
+            foreach (var word in diacriticsRemovalService.RemoveDiacritics(model.Words))
             {
                 if (dict.ContainsKey(word))
                 {
@@ -31,7 +39,6 @@ public sealed class WordStatistics : IWordStatistics
                 }
             }
         }
-
 
         return dict.Values.OrderByDescending(m => m.Count);
     }

@@ -38,7 +38,7 @@ public class Worker : BackgroundService
         foreach (var converterType in new[] { "de", "heb", "gr" })
         {
             var list = _converterFactory.GetDataConverter(converterType).ConvertToBibleReferences().ToBlockingEnumerable(token).ToList();
-            var wordList = _wordStatistics.GetBibleWordStats(list);
+            var wordList = _wordStatistics.GetBibleWordStats(converterType, list);
 
             wordStats.Add(converterType, wordList.ToList());
             dict.Add(converterType, list);

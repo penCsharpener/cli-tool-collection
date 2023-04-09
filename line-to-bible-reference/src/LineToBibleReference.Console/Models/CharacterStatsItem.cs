@@ -10,6 +10,7 @@ public class CharacterStatsItem
     public CharacterTypes? CharacterTypes { get; }
     public string Utf8Code => $"\\u{(int)Character:x4}";
     public string? Description { get; set; }
+    public char? DefaultCharacterEquivalent { get; }
 
     public CharacterStatsItem(char character, int characterValue, int count)
     {
@@ -18,10 +19,15 @@ public class CharacterStatsItem
         Count = count;
     }
 
-
     public CharacterStatsItem(char character, int characterValue, int count, CharacterTypes characterTypes) : this(character, characterValue, count)
     {
         CharacterTypes = characterTypes;
+    }
+
+    public CharacterStatsItem(char character, int characterValue, int count, char? defaultCharacter, CharacterTypes characterTypes)
+        : this(character, characterValue, count, characterTypes)
+    {
+        DefaultCharacterEquivalent = defaultCharacter;
     }
 
     public override string ToString()
