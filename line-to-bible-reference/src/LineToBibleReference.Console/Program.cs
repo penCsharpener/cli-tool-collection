@@ -32,6 +32,8 @@ public class Program
         services.AddScoped<GermanTextToDataConverter>();
         services.AddScoped<HebrewTextToDataConverter>();
         services.AddScoped<GreekTextToDataConverter>();
+        services.AddScoped<EsvTextToDataConverter>();
+        services.AddScoped<KjvTextToDataConverter>();
         services.AddScoped<GermanDiacriticRemovalService>();
         services.AddScoped<HebrewDiacriticRemovalService>();
         services.AddScoped<GreekDiacriticRemovalService>();

@@ -22,7 +22,7 @@ public class GermanTextToDataConverter : ITextToDataConverter
         var chapter = 1;
         var verse = 1;
 
-        await foreach (var line in _fileService.ReadByLineAsync(_settings.PathToGermanTextFile))
+        await foreach (var line in _fileService.ReadByLineAsync(_settings.ConverterPathMapping["elb"]))
         {
             var match = _regex.Match(line);
             bookName = string.IsNullOrWhiteSpace(match.Groups[2].Value) ? bookName : match.Groups[2].Value.Trim();

@@ -23,7 +23,7 @@ public class GreekTextToDataConverter : ITextToDataConverter
         var chapter = 1;
         var verse = 1;
 
-        await foreach (var line in _fileService.ReadByLineAsync(_settings.PathToGreekTextFile))
+        await foreach (var line in _fileService.ReadByLineAsync(_settings.ConverterPathMapping["sbl"]))
         {
             var match = _regex.Match(line);
             bookName = string.IsNullOrWhiteSpace(match.Groups[2].Value) ? bookName : match.Groups[2].Value.Trim();

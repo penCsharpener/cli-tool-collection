@@ -39,10 +39,8 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
+    <Using Include="NSubstitute" />
+    <Using Include="FluentAssertions" />
   </ItemGroup>
 
 </Project>

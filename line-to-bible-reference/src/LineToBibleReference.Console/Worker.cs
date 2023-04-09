@@ -35,7 +35,7 @@ public class Worker : BackgroundService
         Dictionary<string, List<BibleVerseModel>> dict = new();
         Dictionary<string, List<WordStatsItem>> wordStats = new();
 
-        foreach (var converterType in new[] { "de", "heb", "gr" })
+        foreach (var converterType in new[] { "esv", "kjv" })
         {
             var list = _converterFactory.GetDataConverter(converterType).ConvertToBibleReferences().ToBlockingEnumerable(token).ToList();
             var wordList = _wordStatistics.GetBibleWordStats(converterType, list);

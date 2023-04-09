@@ -18,9 +18,11 @@ public sealed class DataConverterFactory : IDataConverterFactory
 
         return converterType switch
         {
-            "de" => serviceProvider.GetRequiredService<GermanTextToDataConverter>(),
+            "elb" => serviceProvider.GetRequiredService<GermanTextToDataConverter>(),
             "heb" => serviceProvider.GetRequiredService<HebrewTextToDataConverter>(),
-            "gr" => serviceProvider.GetRequiredService<GreekTextToDataConverter>()
+            "sbl" => serviceProvider.GetRequiredService<GreekTextToDataConverter>(),
+            "esv" => serviceProvider.GetRequiredService<EsvTextToDataConverter>(),
+            "kjv" => serviceProvider.GetRequiredService<KjvTextToDataConverter>()
         };
     }
 }

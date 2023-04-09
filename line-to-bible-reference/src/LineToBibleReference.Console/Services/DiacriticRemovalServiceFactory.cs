@@ -18,9 +18,11 @@ public sealed class DiacriticRemovalServiceFactory : IDiacriticRemovalServiceFac
 
         return converterType switch
         {
-            "de" => serviceProvider.GetRequiredService<GermanDiacriticRemovalService>(),
+            "elb" => serviceProvider.GetRequiredService<GermanDiacriticRemovalService>(),
             "heb" => serviceProvider.GetRequiredService<HebrewDiacriticRemovalService>(),
-            "gr" => serviceProvider.GetRequiredService<GreekDiacriticRemovalService>()
+            "sbl" => serviceProvider.GetRequiredService<GreekDiacriticRemovalService>(),
+            "esv" => serviceProvider.GetRequiredService<GermanDiacriticRemovalService>(),
+            "kjv" => serviceProvider.GetRequiredService<GermanDiacriticRemovalService>()
         };
     }
 }

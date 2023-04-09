@@ -22,7 +22,7 @@ public class HebrewTextToDataConverter : ITextToDataConverter
         var chapter = 1;
         var verse = 1;
 
-        await foreach (var line in _fileService.ReadByLineAsync(_settings.PathToHebrewTextFile))
+        await foreach (var line in _fileService.ReadByLineAsync(_settings.ConverterPathMapping["heb"]))
         {
             if (!string.IsNullOrWhiteSpace(line) && !line.Contains("       "))
             {
