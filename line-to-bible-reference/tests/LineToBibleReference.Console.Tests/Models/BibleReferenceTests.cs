@@ -12,7 +12,7 @@ public class BibleReferenceTests
             new() { Name = "Mt", BookId = 40, Chapter = 5, Verse = 12 },
             new() { Name = "Dt", BookId = 33, Chapter = 14, Verse = 7 },
             new() { Name = "Ru", BookId = 8, Chapter = 3, Verse = 6 },
-            new() { Name = "Rev", BookId =66, Chapter = 22, Verse = 10 },
+            new() { Name = "Rev", BookId = 66, Chapter = 22, Verse = 10 },
             new() { Name = "Isa", BookId = 23, Chapter = 40, Verse = 3 },
             new() { Name = "Isa", BookId = 23, Chapter = 40, Verse = 6 },
         };

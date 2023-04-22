@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using LineToBibleReference.Console.Abstractions;
 using LineToBibleReference.Console.Models;
 
@@ -6,10 +7,12 @@ namespace LineToBibleReference.Console.Services;
 public class FileService : IFileService
 {
     private readonly AppSettings _settings;
+    private readonly ILogger<FileService> _logger;
 
-    public FileService(AppSettings settings)
+    public FileService(AppSettings settings, ILogger<FileService> logger)
     {
         _settings = settings;
+        _logger = logger;
     }
 
     public async IAsyncEnumerable<string> ReadByLineAsync(string filePath, CancellationToken cancellationToken = default)
@@ -45,5 +48,29 @@ public class FileService : IFileService
         }
 
         await File.WriteAllTextAsync(filePath, fileContent, cancellationToken);
+    }
+
+    public IEnumerable<FileInfo> GetFilesInDirectory(string path, string searchPattern, Regex? fileRegexFilter = null)
+    {
+        if (!Directory.Exists(path))
+        {
+            yield break;
+        }
+
+        foreach (var dir in Directory.GetFiles(path, searchPattern, new EnumerationOptions()))
+        {
+            var file = new FileInfo(dir);
+            _logger.LogDebug("{className}: Accessing File {fileName}", nameof(FileService), file.FullName);
+
+            if (fileRegexFilter is not null && fileRegexFilter.IsMatch(file.Name))
+            {
+                yield return file;
+            }
+        }
+    }
+
+    public IEnumerable<FileInfo> GetFilesInDirectory(string path, string searchPattern)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -14,4 +14,3 @@ public sealed class BibleVerseModel
         return $"{BookAbbreviation} {Chapter}:{Verse} {Text}";
     }
 }
-

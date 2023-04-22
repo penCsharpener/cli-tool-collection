@@ -73,6 +73,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5A719FDF-E0E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8CE30AB4-0DC8-448A-BB39-DCEE744E0CBD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineToBibleReference.Console.Tests", "line-to-bible-reference\tests\LineToBibleReference.Console.Tests\LineToBibleReference.Console.Tests.csproj", "{48D626F3-791A-4878-8A87-C07D1B4D12D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

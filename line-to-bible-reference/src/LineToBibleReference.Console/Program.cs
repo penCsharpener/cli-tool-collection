@@ -29,6 +29,8 @@ public class Program
         services.AddSingleton<IDiacriticRemovalServiceFactory, DiacriticRemovalServiceFactory>();
         services.AddSingleton<ICharacterStatistics, CharacterStatistics>();
         services.AddSingleton<IWordStatistics, WordStatistics>();
+        services.AddSingleton<IMorphReader, MorphReader>();
+        services.AddSingleton<IValueGrouper, ValueGrouper>();
         services.AddScoped<GermanTextToDataConverter>();
         services.AddScoped<HebrewTextToDataConverter>();
         services.AddScoped<GreekTextToDataConverter>();

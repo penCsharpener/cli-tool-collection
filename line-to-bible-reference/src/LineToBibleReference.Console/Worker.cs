@@ -9,6 +9,8 @@ public class Worker : BackgroundService
     private readonly ICharacterStatistics _characterStatistics;
     private readonly IWordStatistics _wordStatistics;
     private readonly IFileService _fileService;
+    private readonly IMorphReader _morphReader;
+    private readonly IValueGrouper _valueGrouper;
     private readonly IHostApplicationLifetime _host;
     private readonly AppSettings _settings;
     private readonly ILogger<Worker> _logger;
@@ -17,6 +19,8 @@ public class Worker : BackgroundService
                   ICharacterStatistics characterStatistics,
                   IWordStatistics wordStatistics,
                   IFileService fileService,
+                  IMorphReader morphReader,
+                  IValueGrouper valueGrouper,
                   IHostApplicationLifetime host,
                   AppSettings settings,
                   ILogger<Worker> logger)
@@ -25,12 +29,30 @@ public class Worker : BackgroundService
         _characterStatistics = characterStatistics;
         _wordStatistics = wordStatistics;
         _fileService = fileService;
+        _morphReader = morphReader;
+        _valueGrouper = valueGrouper;
         _host = host;
         _settings = settings;
         _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken token)
+    protected override async Task ExecuteAsync(CancellationToken token = default)
+    {
+        await ParseCsvFilesAsync();
+
+        _host.StopApplication();
+
+        await StopAsync(token);
+    }
+
+    private async Task ParseCsvFilesAsync(CancellationToken token = default)
+    {
+        var items = _morphReader.ReadMorphologyAsync().ToBlockingEnumerable(token).ToList();
+
+        await _valueGrouper.WriteAllUnitValues(items);
+    }
+
+    private async Task IterateOverTexts(CancellationToken token = default)
     {
         Dictionary<string, List<BibleVerseModel>> dict = new();
         Dictionary<string, List<WordStatsItem>> wordStats = new();
@@ -47,10 +69,7 @@ public class Worker : BackgroundService
 
             _logger.LogInformation("count: {count}", list.Count);
             //list.GroupBy(r => new { r.BookAbbreviation, r.Chapter }).ToList().ForEach(g => _logger.LogInformation("{book} {chapter}", g.Key.BookAbbreviation, g.Key.Chapter));
+            await Task.Delay(0);
         }
-
-        _host.StopApplication();
-
-        await StopAsync(token);
     }
 }
