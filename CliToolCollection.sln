@@ -62,9 +62,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenCsharpener.Mailing.CsvMassMailer.Infrastructure", "mailing\src\PenCsharpener.Mailing.CsvMassMailer.Infrastructure\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.csproj", "{D70FDA05-1AD9-43B5-95BD-BEAFEB8E13A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Mailing.CsvMassMailer.Infrastructure", "mailing\src\PenCsharpener.Mailing.CsvMassMailer.Infrastructure\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.csproj", "{D70FDA05-1AD9-43B5-95BD-BEAFEB8E13A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests", "mailing\tests\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests.csproj", "{C6C8417F-755D-465D-99B2-E10F74BE78AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests", "mailing\tests\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests\PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests.csproj", "{C6C8417F-755D-465D-99B2-E10F74BE78AD}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LineToBibleReference", "LineToBibleReference", "{FF9E3E92-3EA4-4BFC-AE8E-C06214516B07}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineToBibleReference.Console", "line-to-bible-reference\src\LineToBibleReference.Console\LineToBibleReference.Console.csproj", "{D56E854C-0073-42AC-B8BA-5886D997BB6A}"
@@ -141,6 +142,10 @@ Global
 		{D56E854C-0073-42AC-B8BA-5886D997BB6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D56E854C-0073-42AC-B8BA-5886D997BB6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D56E854C-0073-42AC-B8BA-5886D997BB6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48D626F3-791A-4878-8A87-C07D1B4D12D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48D626F3-791A-4878-8A87-C07D1B4D12D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48D626F3-791A-4878-8A87-C07D1B4D12D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48D626F3-791A-4878-8A87-C07D1B4D12D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,6 +178,7 @@ Global
 		{D56E854C-0073-42AC-B8BA-5886D997BB6A} = {5A719FDF-E0E5-470E-8D81-636EB46475CD}
 		{5A719FDF-E0E5-470E-8D81-636EB46475CD} = {FF9E3E92-3EA4-4BFC-AE8E-C06214516B07}
 		{8CE30AB4-0DC8-448A-BB39-DCEE744E0CBD} = {FF9E3E92-3EA4-4BFC-AE8E-C06214516B07}
+		{48D626F3-791A-4878-8A87-C07D1B4D12D2} = {8CE30AB4-0DC8-448A-BB39-DCEE744E0CBD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D1BC50AE-D029-4A80-927D-20D33C6BE78D}

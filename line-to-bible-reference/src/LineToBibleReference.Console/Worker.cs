@@ -38,18 +38,18 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken token = default)
     {
-        await ParseCsvFilesAsync();
+        ParseCsvFiles();
 
         _host.StopApplication();
 
         await StopAsync(token);
     }
 
-    private async Task ParseCsvFilesAsync(CancellationToken token = default)
+    private void ParseCsvFiles(CancellationToken token = default)
     {
         var items = _morphReader.ReadMorphologyAsync().ToBlockingEnumerable(token).ToList();
 
-        await _valueGrouper.WriteAllUnitValues(items);
+        //await _valueGrouper.WriteAllUnitValues(items);
     }
 
     private async Task IterateOverTexts(CancellationToken token = default)

@@ -31,6 +31,7 @@ public class Program
         services.AddSingleton<IWordStatistics, WordStatistics>();
         services.AddSingleton<IMorphReader, MorphReader>();
         services.AddSingleton<IValueGrouper, ValueGrouper>();
+        services.AddSingleton<ICsvValueParser, CsvValueParser>();
         services.AddScoped<GermanTextToDataConverter>();
         services.AddScoped<HebrewTextToDataConverter>();
         services.AddScoped<GreekTextToDataConverter>();

@@ -12,43 +12,43 @@ public sealed class ValueGrouper : IValueGrouper
     private readonly Dictionary<string, List<string>> _unitValues = new();
 
     private static readonly string[] relevantPropertyNames = new[] {
-        nameof(WordMorphologyModel.PartOfSpeech),
-        nameof(WordMorphologyModel.ConjunctionTypeHebrew),
-        nameof(WordMorphologyModel.EndingTypeHebrew),
-        nameof(WordMorphologyModel.GenderHebrew),
-        nameof(WordMorphologyModel.NounTypeHebrew),
-        nameof(WordMorphologyModel.NumberHebrew),
-        nameof(WordMorphologyModel.NumeralTypeHebrew),
-        nameof(WordMorphologyModel.PersonHebrew),
-        nameof(WordMorphologyModel.PrepositionTypeHebrew),
-        nameof(WordMorphologyModel.PronounTypeHebrew),
-        nameof(WordMorphologyModel.StateHebrew),
-        nameof(WordMorphologyModel.StemHebrew),
-        nameof(WordMorphologyModel.TAMHebrew),
-        nameof(WordMorphologyModel.YiqtōlVolitivesHebrew),
-        nameof(WordMorphologyModel.AdverbParticleTypeGreek),
-        nameof(WordMorphologyModel.CaseGreek),
-        nameof(WordMorphologyModel.ConjunctionSubtypeGreek),
-        nameof(WordMorphologyModel.DegreeGreek),
-        nameof(WordMorphologyModel.GenderGreek),
-        nameof(WordMorphologyModel.IndeclinableTypeGreek),
-        nameof(WordMorphologyModel.MoodGreek),
-        nameof(WordMorphologyModel.NumberGreek),
-        nameof(WordMorphologyModel.PersonGreek),
-        nameof(WordMorphologyModel.PronounSubtypeGreek),
-        nameof(WordMorphologyModel.PronounTypeGreek),
-        nameof(WordMorphologyModel.TenseGreek),
-        nameof(WordMorphologyModel.VoiceGreek)
+        nameof(WordMorphologyRawModel.PartOfSpeech),
+        nameof(WordMorphologyRawModel.ConjunctionTypeHebrew),
+        nameof(WordMorphologyRawModel.EndingTypeHebrew),
+        nameof(WordMorphologyRawModel.GenderGreek),
+        nameof(WordMorphologyRawModel.NounTypeHebrew),
+        nameof(WordMorphologyRawModel.NumberGreek),
+        nameof(WordMorphologyRawModel.NumeralTypeHebrew),
+        nameof(WordMorphologyRawModel.PersonGreek),
+        nameof(WordMorphologyRawModel.PrepositionTypeHebrew),
+        nameof(WordMorphologyRawModel.PronounTypeHebrew),
+        nameof(WordMorphologyRawModel.StateHebrew),
+        nameof(WordMorphologyRawModel.StemHebrew),
+        nameof(WordMorphologyRawModel.TAMHebrew),
+        nameof(WordMorphologyRawModel.YiqtolVolitivesHebrew),
+        nameof(WordMorphologyRawModel.AdverbParticleTypeGreek),
+        nameof(WordMorphologyRawModel.CaseGreek),
+        nameof(WordMorphologyRawModel.ConjunctionSubtypeGreek),
+        nameof(WordMorphologyRawModel.DegreeGreek),
+        nameof(WordMorphologyRawModel.GenderHebrew),
+        nameof(WordMorphologyRawModel.IndeclinableTypeGreek),
+        nameof(WordMorphologyRawModel.MoodGreek),
+        nameof(WordMorphologyRawModel.NumberHebrew),
+        nameof(WordMorphologyRawModel.PersonHebrew),
+        nameof(WordMorphologyRawModel.PronounSubtypeGreek),
+        nameof(WordMorphologyRawModel.PronounTypeGreek),
+        nameof(WordMorphologyRawModel.TenseGreek),
+        nameof(WordMorphologyRawModel.VoiceGreek)
     };
 
-    private static readonly PropertyInfo[] _propertyInfos = typeof(WordMorphologyModel).GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => relevantPropertyNames.Contains(p.Name)).ToArray();
+    private static readonly PropertyInfo[] _propertyInfos = typeof(WordMorphologyRawModel).GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => relevantPropertyNames.Contains(p.Name)).ToArray();
 
     public ValueGrouper(IFileService fileService)
     {
         _fileService = fileService;
     }
 
-    public async Task WriteAllUnitValues(IEnumerable<WordMorphologyModel> values)
+    public async Task WriteAllUnitValues(IEnumerable<WordMorphologyRawModel> values)
     {
         foreach (var v in values)
         {
@@ -74,6 +74,11 @@ public sealed class ValueGrouper : IValueGrouper
                     {
                         _unitValues[propName].Add(item);
                     }
+                }
+
+                if (!_unitValues[propName].Contains(value))
+                {
+                    _unitValues[propName].Add(value);
                 }
             }
         }

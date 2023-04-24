@@ -60,10 +60,11 @@ public class FileService : IFileService
         foreach (var dir in Directory.GetFiles(path, searchPattern, new EnumerationOptions()))
         {
             var file = new FileInfo(dir);
-            _logger.LogDebug("{className}: Accessing File {fileName}", nameof(FileService), file.FullName);
 
             if (fileRegexFilter is not null && fileRegexFilter.IsMatch(file.Name))
             {
+                _logger.LogDebug("{className}: Accessing File {fileName}", nameof(FileService), file.FullName);
+
                 yield return file;
             }
         }

@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using CsvHelper;
 using CsvHelper.Configuration;
 using LineToBibleReference.Console.Abstractions;
-using LineToBibleReference.Console.Extensions;
 using LineToBibleReference.Console.Models;
 
 namespace LineToBibleReference.Console.Services;
@@ -11,28 +11,35 @@ namespace LineToBibleReference.Console.Services;
 public sealed class MorphReader : IMorphReader
 {
     private readonly IFileService _fileService;
+    private readonly ICsvValueParser _csvValueParser;
     private readonly AppSettings _settings;
 
-    public MorphReader(IFileService fileService, AppSettings settings)
+    public MorphReader(IFileService fileService, ICsvValueParser csvValueParser, AppSettings settings)
     {
         _fileService = fileService;
+        _csvValueParser = csvValueParser;
         _settings = settings;
     }
 
-    public async IAsyncEnumerable<WordMorphologyModel> ReadMorphologyAsync()
+    public async IAsyncEnumerable<WordMorphologyModel> ReadMorphologyAsync([EnumeratorCancellation] CancellationToken token = default)
     {
         var pathSettings = _settings.CsvPathMapping["hebl"];
 
         foreach (var filePath in _fileService.GetFilesInDirectory(pathSettings.Path, pathSettings.FileFilter, new Regex(pathSettings.RegexFilter)))
         {
+            if (token.IsCancellationRequested)
+            {
+                yield break;
+            }
+
             using var reader = new StreamReader(filePath.FullName);
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             {
                 csv.Context.RegisterClassMap<PropertyMap>();
 
-                await foreach (var item in csv.GetRecordsAsync<WordMorphologyRawModel>())
+                await foreach (var item in csv.GetRecordsAsync<WordMorphologyRawModel>(token))
                 {
-                    yield return item.ToWordMorphologyModel();
+                    yield return _csvValueParser.Parse(item);
                 }
             }
         }
@@ -67,7 +74,7 @@ public sealed class MorphReader : IMorphReader
             Map(m => m.StateHebrew).Name("State (Logos Hebrew)").Optional();
             Map(m => m.StemHebrew).Name("Stem (Logos Hebrew)").Optional();
             Map(m => m.TAMHebrew).Name("TAM (Logos Hebrew)").Optional();
-            Map(m => m.YiqtōlVolitivesHebrew).Name("Yiqtōl Volitives (Logos Hebrew)").Optional();
+            Map(m => m.YiqtolVolitivesHebrew).Name("Yiqtōl Volitives (Logos Hebrew)").Optional();
             Map(m => m.GreekStrongs).Name("Greek Strong’s").Optional();
             Map(m => m.LemmaGreek).Name("Lemma (Greek)").Optional();
             Map(m => m.LouwNida).Name("Louw-Nida").Optional();
