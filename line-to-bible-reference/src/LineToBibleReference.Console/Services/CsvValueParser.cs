@@ -317,7 +317,7 @@ public class CsvValueParser : ICsvValueParser
 
                 foreach (var item in raw.PronounTypeGreek.SplitAndTrim())
                 {
-                    value += _enumMapping[item];
+                    value += _enumMappingPronounTypeGreek[item];
                 }
 
                 model.PronounTypeGreek = (PronounTypeGreek)value;
@@ -450,7 +450,7 @@ public class CsvValueParser : ICsvValueParser
         { nameof(Gender.Feminine).ToLower(), (int) Gender.Feminine },
         { nameof(Gender.Neuter).ToLower(), (int) Gender.Neuter },
         { nameof(IndeclinableTypeGreek.Foreign).ToLower(), (int) IndeclinableTypeGreek.Foreign },
-        { nameof(IndeclinableTypeGreek.ProperNoun).ToLower(), (int) IndeclinableTypeGreek.ProperNoun },
+        { "proper noun", (int) IndeclinableTypeGreek.ProperNoun },
         { nameof(IndeclinableTypeGreek.Numeral).ToLower(), (int) IndeclinableTypeGreek.Numeral },
         { nameof(IndeclinableTypeGreek.Letter).ToLower(), (int) IndeclinableTypeGreek.Letter },
         { nameof(MoodGreek.Participle).ToLower(), (int) MoodGreek.Participle },
@@ -476,7 +476,7 @@ public class CsvValueParser : ICsvValueParser
         { nameof(VoiceGreek.Passive).ToLower(), (int) VoiceGreek.Passive },
         { nameof(VoiceGreek.Active).ToLower(), (int) VoiceGreek.Active },
         { nameof(VoiceGreek.Middle).ToLower(), (int) VoiceGreek.Middle },
-        { nameof(VoiceGreek.MiddleOrPassive).ToLower(), (int) VoiceGreek.MiddleOrPassive },
+        { "either middle or passive", (int) VoiceGreek.MiddleOrPassive },
         { "locative hē", (int) EndingTypeHebrew.LocativeHe },
         { "energic nûn", (int) EndingTypeHebrew.EnergicNun },
         { "paragogic nûn", (int) EndingTypeHebrew.ParagogicNun },

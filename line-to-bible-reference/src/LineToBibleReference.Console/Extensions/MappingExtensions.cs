@@ -8,9 +8,7 @@ public static class MappingExtensions
         return new()
         {
             Resource = raw.Resource,
-            Book = raw.Book,
-            Chapter = raw.Chapter,
-            Reference = raw.Reference,
+            Reference = BibleReference.Parse(raw.Reference!),
             PreviousContext = raw.PreviousContext,
             Result = raw.Result,
             NextContext = raw.NextContext,

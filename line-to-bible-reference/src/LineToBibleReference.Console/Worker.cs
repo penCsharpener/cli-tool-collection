@@ -38,7 +38,9 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken token = default)
     {
-        ParseCsvFiles();
+        ParseCsvFiles(token);
+
+        //await IterateOverTexts(token);
 
         _host.StopApplication();
 
@@ -47,7 +49,15 @@ public class Worker : BackgroundService
 
     private void ParseCsvFiles(CancellationToken token = default)
     {
-        var items = _morphReader.ReadMorphologyAsync().ToBlockingEnumerable(token).ToList();
+        foreach (var csvPathMapping in _settings.CsvPathMapping)
+        {
+            var items = _morphReader.ReadMorphologyAsync(csvPathMapping.Key, token).ToBlockingEnumerable(token).ToList();
+            items = items.OrderBy(i => i.Reference).ToList();
+
+            _logger.LogInformation("Read {count} items.", items.Count);
+
+            _fileService.WriteCsvAsync(items, csvPathMapping.Value.TargetPath, csvPathMapping.Value.TargetFileName, token);
+        }
 
         //await _valueGrouper.WriteAllUnitValues(items);
     }
@@ -57,19 +67,21 @@ public class Worker : BackgroundService
         Dictionary<string, List<BibleVerseModel>> dict = new();
         Dictionary<string, List<WordStatsItem>> wordStats = new();
 
-        foreach (var converterType in new[] { "esv", "kjv" })
+        foreach (var converterType in _settings.ConverterPathMapping)
         {
-            var list = _converterFactory.GetDataConverter(converterType).ConvertToBibleReferences().ToBlockingEnumerable(token).ToList();
-            var wordList = _wordStatistics.GetBibleWordStats(converterType, list);
+            var converterName = converterType.Key;
+            var list = _converterFactory.GetDataConverter(converterName).ConvertToBibleReferences().ToBlockingEnumerable(token).ToList();
+            var wordList = _wordStatistics.GetBibleWordStats(converterName, list);
 
-            wordStats.Add(converterType, wordList.ToList());
-            dict.Add(converterType, list);
+            wordStats.Add(converterName, wordList.ToList());
+            dict.Add(converterName, list);
 
             var stats = _characterStatistics.GetLanguageStatistics(list);
 
-            _logger.LogInformation("count: {count}", list.Count);
+            _logger.LogInformation("{type}: count: {count}", converterType, list.Count);
+            _logger.LogInformation("{type}: word count: {wordCount}", converterType, list.Sum(v => v.Words?.Length ?? 0));
             //list.GroupBy(r => new { r.BookAbbreviation, r.Chapter }).ToList().ForEach(g => _logger.LogInformation("{book} {chapter}", g.Key.BookAbbreviation, g.Key.Chapter));
-            await Task.Delay(0);
+            await Task.Delay(0, token);
         }
     }
 }

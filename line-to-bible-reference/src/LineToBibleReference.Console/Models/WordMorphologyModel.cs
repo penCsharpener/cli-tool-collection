@@ -52,9 +52,7 @@ public sealed class WordMorphologyRawModel
 public sealed class WordMorphologyModel
 {
     public string? Resource { get; set; }
-    public string? Book { get; set; }
-    public string? Chapter { get; set; }
-    public string? Reference { get; set; }
+    public BibleReference? Reference { get; set; }
     public string? PreviousContext { get; set; }
     public string? Result { get; set; }
     public string? NextContext { get; set; }

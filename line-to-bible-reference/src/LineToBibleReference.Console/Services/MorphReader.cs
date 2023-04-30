@@ -21,9 +21,9 @@ public sealed class MorphReader : IMorphReader
         _settings = settings;
     }
 
-    public async IAsyncEnumerable<WordMorphologyModel> ReadMorphologyAsync([EnumeratorCancellation] CancellationToken token = default)
+    public async IAsyncEnumerable<WordMorphologyModel> ReadMorphologyAsync(string key, [EnumeratorCancellation] CancellationToken token = default)
     {
-        var pathSettings = _settings.CsvPathMapping["hebl"];
+        var pathSettings = _settings.CsvPathMapping[key];
 
         foreach (var filePath in _fileService.GetFilesInDirectory(pathSettings.Path, pathSettings.FileFilter, new Regex(pathSettings.RegexFilter)))
         {
@@ -50,18 +50,18 @@ public sealed class MorphReader : IMorphReader
         public PropertyMap()
         {
             Map(m => m.Resource);
-            Map(m => m.Book);
-            Map(m => m.Chapter);
-            Map(m => m.Reference);
-            Map(m => m.PreviousContext).Name("Previous Context");
-            Map(m => m.Result).Name("Result");
-            Map(m => m.NextContext).Name("Next Context");
-            Map(m => m.Form);
+            Map(m => m.Book).Optional();
+            Map(m => m.Chapter).Optional();
+            Map(m => m.Reference).Optional();
+            Map(m => m.PreviousContext).Name("Previous Context").Optional();
+            Map(m => m.Result).Name("Result").Optional();
+            Map(m => m.NextContext).Name("Next Context").Optional();
+            Map(m => m.Form).Optional();
             Map(m => m.HebrewStrongs).Name("Hebrew Strong’s").Optional();
             Map(m => m.LemmaHebrew).Name("Lemma (Hebrew)").Optional();
-            Map(m => m.Root).Name("Root");
-            Map(m => m.Sense).Name("Sense");
-            Map(m => m.PartOfSpeech).Name("Part of Speech");
+            Map(m => m.Root).Name("Root").Optional();
+            Map(m => m.Sense).Name("Sense").Optional();
+            Map(m => m.PartOfSpeech).Name("Part of Speech").Optional();
             Map(m => m.ConjunctionTypeHebrew).Name("Conjunction Type (Logos Hebrew)").Optional();
             Map(m => m.EndingTypeHebrew).Name("Ending Type (Logos Hebrew)").Optional();
             Map(m => m.GenderHebrew).Name("Gender (Logos Hebrew)").Optional();

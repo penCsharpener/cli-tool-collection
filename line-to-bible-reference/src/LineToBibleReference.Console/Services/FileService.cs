@@ -1,5 +1,8 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.RegularExpressions;
+using CsvHelper;
 using LineToBibleReference.Console.Abstractions;
 using LineToBibleReference.Console.Models;
 
@@ -15,7 +18,7 @@ public class FileService : IFileService
         _logger = logger;
     }
 
-    public async IAsyncEnumerable<string> ReadByLineAsync(string filePath, CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<string> ReadByLineAsync(string filePath, [EnumeratorCancellation] CancellationToken token = default)
     {
         if (!File.Exists(filePath))
         {
@@ -26,9 +29,9 @@ public class FileService : IFileService
         using var reader = new StreamReader(stream, Encoding.UTF8, true, 4096);
 
         string? line;
-        while ((line = await reader.ReadLineAsync()) != null)
+        while ((line = await reader.ReadLineAsync(token)) != null)
         {
-            if (cancellationToken.IsCancellationRequested)
+            if (token.IsCancellationRequested)
             {
                 yield break;
             }
@@ -70,8 +73,10 @@ public class FileService : IFileService
         }
     }
 
-    public IEnumerable<FileInfo> GetFilesInDirectory(string path, string searchPattern)
+    public async Task WriteCsvAsync<T>(IEnumerable<T> items, string path, string fileName, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var writer = new StreamWriter(Path.Combine(path, fileName));
+        using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+        await csv.WriteRecordsAsync(items, token);
     }
 }

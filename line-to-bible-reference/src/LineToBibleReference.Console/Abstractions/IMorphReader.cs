@@ -4,5 +4,5 @@ namespace LineToBibleReference.Console.Abstractions;
 
 public interface IMorphReader
 {
-    IAsyncEnumerable<WordMorphologyModel> ReadMorphologyAsync(CancellationToken token = default);
+    IAsyncEnumerable<WordMorphologyModel> ReadMorphologyAsync(string key, CancellationToken token = default);
 }
