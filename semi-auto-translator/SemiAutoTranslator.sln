@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1A6CF002-B603-496F-9AE5-75872C0C4E1B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{97603CA3-34A6-4108-8AF9-3D92B644AE11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemiAutoTranslator.Console", "src\SemiAutoTranslator.Console\SemiAutoTranslator.Console.csproj", "{963E870A-9507-4DB8-95BB-CE768D76D811}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{963E870A-9507-4DB8-95BB-CE768D76D811}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{963E870A-9507-4DB8-95BB-CE768D76D811}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{963E870A-9507-4DB8-95BB-CE768D76D811}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{963E870A-9507-4DB8-95BB-CE768D76D811}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{963E870A-9507-4DB8-95BB-CE768D76D811} = {1A6CF002-B603-496F-9AE5-75872C0C4E1B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD4CECA3-87A0-4748-821F-29BAD61DFEA9}
+	EndGlobalSection
+EndGlobal
