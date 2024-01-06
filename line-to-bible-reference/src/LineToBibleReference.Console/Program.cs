@@ -32,6 +32,7 @@ public class Program
         services.AddSingleton<IMorphReader, MorphReader>();
         services.AddSingleton<IValueGrouper, ValueGrouper>();
         services.AddSingleton<ICsvValueParser, CsvValueParser>();
+        services.AddSingleton<IRootGroupingService, RootGroupingService>();
         services.AddScoped<GermanTextToDataConverter>();
         services.AddScoped<HebrewTextToDataConverter>();
         services.AddScoped<GreekTextToDataConverter>();

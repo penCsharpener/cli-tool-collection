@@ -11,6 +11,7 @@ public class Worker : BackgroundService
     private readonly IFileService _fileService;
     private readonly IMorphReader _morphReader;
     private readonly IValueGrouper _valueGrouper;
+    private readonly IRootGroupingService _rootGroupingService;
     private readonly IHostApplicationLifetime _host;
     private readonly AppSettings _settings;
     private readonly ILogger<Worker> _logger;
@@ -21,6 +22,7 @@ public class Worker : BackgroundService
                   IFileService fileService,
                   IMorphReader morphReader,
                   IValueGrouper valueGrouper,
+                  IRootGroupingService rootGroupingService,
                   IHostApplicationLifetime host,
                   AppSettings settings,
                   ILogger<Worker> logger)
@@ -31,6 +33,7 @@ public class Worker : BackgroundService
         _fileService = fileService;
         _morphReader = morphReader;
         _valueGrouper = valueGrouper;
+        _rootGroupingService = rootGroupingService;
         _host = host;
         _settings = settings;
         _logger = logger;
@@ -38,7 +41,7 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken token = default)
     {
-        ParseCsvFiles(token);
+        await ParseCsvFiles(token);
 
         //await IterateOverTexts(token);
 
@@ -47,7 +50,7 @@ public class Worker : BackgroundService
         await StopAsync(token);
     }
 
-    private void ParseCsvFiles(CancellationToken token = default)
+    private async Task ParseCsvFiles(CancellationToken token = default)
     {
         foreach (var csvPathMapping in _settings.CsvPathMapping)
         {
@@ -56,7 +59,11 @@ public class Worker : BackgroundService
 
             _logger.LogInformation("Read {count} items.", items.Count);
 
-            _fileService.WriteCsvAsync(items, csvPathMapping.Value.TargetPath, csvPathMapping.Value.TargetFileName, token);
+            await _fileService.WriteCsvAsync(items, csvPathMapping.Value.TargetPath, csvPathMapping.Value.TargetFileName, token);
+
+            var dict = _rootGroupingService.GroupByRoot(items);
+
+            await _fileService.WriteConcordanceAsync(dict, csvPathMapping.Value.TargetPathRootGrouping, csvPathMapping.Value.TargetFileNameRootGrouping, token);
         }
 
         //await _valueGrouper.WriteAllUnitValues(items);

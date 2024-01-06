@@ -80,4 +80,9 @@ public sealed record BibleReference : IComparable<BibleReference>
 
         return (int.Parse(match.Groups[3].Value), int.Parse(match.Groups[5].Value));
     }
+
+    public override string ToString()
+    {
+        return $"{Name} {Chapter}:{Verse}";
+    }
 }

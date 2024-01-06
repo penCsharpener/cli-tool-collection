@@ -4,7 +4,6 @@ using PhotoRename.Common.Models;
 using PhotoRename.Common.Services.Abstractions;
 using PhotoRenamer.Cli.Models;
 using PhotoRenamer.Cli.Services.Abstractions;
-using SixLabors.ImageSharp;
 
 namespace PhotoRenamer.Cli.Services;
 
@@ -57,7 +56,19 @@ public class RenameService : IRenameService
                 {
                     using var image = await Image.LoadAsync(file, stoppingToken);
                     var exif = image.Metadata.ExifProfile;
-                    var creationDateTag = exif.GetValue(SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag.DateTimeOriginal);
+
+                    if (exif is null)
+                    {
+                        continue;
+                    }
+
+                    var creationDateTag = exif.TryGetValue(SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag.DateTimeOriginal, out var val) ? val : null;
+
+                    if (creationDateTag is null || creationDateTag.Value is null)
+                    {
+                        continue;
+                    }
+
                     var creationDateElements = creationDateTag.Value.Split(':', StringSplitOptions.RemoveEmptyEntries);
                     var creationDateString = $"{creationDateElements[0]}-{creationDateElements[1]}-{creationDateElements[2]}:{creationDateElements[3]}:{creationDateElements[4]}";
                     var creationDate = DateTime.Parse(creationDateString);

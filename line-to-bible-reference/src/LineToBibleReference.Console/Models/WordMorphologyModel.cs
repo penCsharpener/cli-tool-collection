@@ -57,7 +57,7 @@ public sealed class WordMorphologyModel
     public string? Result { get; set; }
     public string? NextContext { get; set; }
     public string? Form { get; set; }
-    public string? Root { get; set; }
+    public string[]? Roots { get; set; }
     public string? Sense { get; set; }
     public PartOfSpeech PartOfSpeech { get; set; }
     public ConjunctionSubtype? ConjunctionTypeHebrew { get; set; }

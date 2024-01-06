@@ -35,6 +35,11 @@ public class CsvValueParser : ICsvValueParser
                 model.AdverbParticleTypeGreek = (AdverbParticleTypeGreek)value;
             }
 
+            if (!raw.Root.IsNullOrWhiteSpace())
+            {
+                model.Roots = raw.Root.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(e => e.Trim()).ToArray();
+            }
+
             if (!raw.PronounSubtypeGreek.IsNullOrWhiteSpace())
             {
                 var value = 0;

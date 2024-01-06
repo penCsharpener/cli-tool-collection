@@ -79,4 +79,21 @@ public class FileService : IFileService
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
         await csv.WriteRecordsAsync(items, token);
     }
+
+    public async Task WriteConcordanceAsync(Dictionary<string, List<WordMorphologyModel>> dictionary, string path, string fileName, CancellationToken token = default)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var kvp in dictionary)
+        {
+            sb.AppendLine(kvp.Key);
+
+            foreach (var model in kvp.Value)
+            {
+                sb.AppendLine($"{model.Reference} => {model.Result}");
+            }
+        }
+
+        await File.WriteAllTextAsync(Path.Combine(path, fileName), sb.ToString(), token);
+    }
 }

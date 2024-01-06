@@ -13,7 +13,6 @@ public static class MappingExtensions
             Result = raw.Result,
             NextContext = raw.NextContext,
             Form = raw.Form,
-            Root = raw.Root?.Replace(Environment.NewLine, ""),
             Sense = raw.Sense,
             Strongs = raw.GreekStrongs.IsNullOrWhiteSpace() ? raw.HebrewStrongs : raw.GreekStrongs,
             Lemma = raw.LemmaHebrew.IsNullOrWhiteSpace() ? raw.LemmaGreek : raw.LemmaHebrew,
