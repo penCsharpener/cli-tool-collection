@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-PhotoTimeStampShifter.Cli-650A2EE0-30DD-49F1-B47E-627B4F24AEB1</UserSecretsId>
     <Nullable>enable</Nullable>
@@ -10,10 +10,10 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Cocona" Version="2.0.3" />
-    <PackageReference Include="Microsoft.Management.Infrastructure" Version="2.0.0" />
-    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.2.6" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+    <PackageReference Include="Cocona" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Management.Infrastructure" Version="3.0.0" />
+    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
