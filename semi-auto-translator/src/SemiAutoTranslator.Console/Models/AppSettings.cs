@@ -3,11 +3,14 @@ public class AppSettings
 {
     public string Url { get; set; } = default!;
     public string XPathCookieBannerButton { get; set; } = default!;
-    public string XPathLangSourceButton { get; set; } = default!;
-    public string XPathSourceButton { get; set; } = default!;
-    public string XPathLangTargetButton { get; set; } = default!;
-    public string XPathTargetButton { get; set; } = default!;
-    public string XPathSourceInput { get; set; } = default!;
-    public string XPathTranslatedTextElements { get; set; } = default!;
-    public string SourceText { get; set; } = default!;
+    public string CssSelectorPluginButton { get; set; } = default!;
+    public string CssSelectorSourceInput { get; set; } = default!;
+    public string CssSelectorTranslatedTextElements { get; set; } = default!;
+    public int MaxCharactersPerRequest { get; set; }
+    public TextSource TextSource { get; set; } = default!;
+}
+
+public class TextSource
+{
+    public string FilePath { get; set; } = default!;
 }

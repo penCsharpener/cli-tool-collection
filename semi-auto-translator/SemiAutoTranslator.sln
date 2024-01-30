@@ -7,7 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1A6CF002-B60
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{97603CA3-34A6-4108-8AF9-3D92B644AE11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemiAutoTranslator.Console", "src\SemiAutoTranslator.Console\SemiAutoTranslator.Console.csproj", "{963E870A-9507-4DB8-95BB-CE768D76D811}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SemiAutoTranslator.Console", "src\SemiAutoTranslator.Console\SemiAutoTranslator.Console.csproj", "{963E870A-9507-4DB8-95BB-CE768D76D811}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemiAutoTranslator.Console.Tests", "tests\SemiAutoTranslator.Console.Tests\SemiAutoTranslator.Console.Tests.csproj", "{8F2B8AE7-04CD-4215-AAEE-46A6D9AFD6BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,12 +21,17 @@ Global
 		{963E870A-9507-4DB8-95BB-CE768D76D811}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{963E870A-9507-4DB8-95BB-CE768D76D811}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{963E870A-9507-4DB8-95BB-CE768D76D811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F2B8AE7-04CD-4215-AAEE-46A6D9AFD6BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F2B8AE7-04CD-4215-AAEE-46A6D9AFD6BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F2B8AE7-04CD-4215-AAEE-46A6D9AFD6BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F2B8AE7-04CD-4215-AAEE-46A6D9AFD6BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{963E870A-9507-4DB8-95BB-CE768D76D811} = {1A6CF002-B603-496F-9AE5-75872C0C4E1B}
+		{8F2B8AE7-04CD-4215-AAEE-46A6D9AFD6BC} = {97603CA3-34A6-4108-8AF9-3D92B644AE11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD4CECA3-87A0-4748-821F-29BAD61DFEA9}
