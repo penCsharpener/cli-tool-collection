@@ -1,5 +1,4 @@
-﻿using System.Management.Automation;
-using Cocona;
+﻿using Cocona;
 using Cocona.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using PhotoRename.Common.Services;
@@ -30,7 +29,7 @@ public static class Program
                 .AddServices()
                 .Build();
 
-            app.AddCommand(async (RenameParameters options, ITimestampShifterService renameService, CoconaAppContext context) =>
+            app.AddCommand((RenameParameters options, ITimestampShifterService renameService, CoconaAppContext context) =>
             {
                 if (string.IsNullOrWhiteSpace(options.TimeShiftValue))
                 {
@@ -48,21 +47,21 @@ public static class Program
 
                 if (options.ExecuteRename && !options.PreferCmd)
                 {
-                    using var ps = PowerShell.Create();
+                    //using var ps = System.Management.Automation.PowerShell.Create();
 
-                    foreach (var line in cmdList)
-                    {
-                        if (context.CancellationToken.IsCancellationRequested)
-                        {
-                            return;
-                        }
+                    //foreach (var line in cmdList)
+                    //{
+                    //    if (context.CancellationToken.IsCancellationRequested)
+                    //    {
+                    //        return;
+                    //    }
 
-                        ps.AddScript(line);
+                    //    ps.AddScript(line);
 
-                        var pipelineObjects = await ps.InvokeAsync();
+                    //    var pipelineObjects = await ps.InvokeAsync();
 
-                        ps.Commands.Clear();
-                    }
+                    //    ps.Commands.Clear();
+                    //}
                 }
             });
 

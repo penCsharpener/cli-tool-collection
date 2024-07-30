@@ -1,4 +1,3 @@
-using System.Management.Automation;
 using Cocona;
 using Cocona.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,21 +44,21 @@ public static class Program
 
                 if (options.ExecuteRename && !options.PreferCmd)
                 {
-                    using var ps = PowerShell.Create();
+                    //using var ps = System.Management.Automation.PowerShell.Create();
 
-                    foreach (var line in cmdList)
-                    {
-                        if (context.CancellationToken.IsCancellationRequested)
-                        {
-                            return;
-                        }
+                    //foreach (var line in cmdList)
+                    //{
+                    //    if (context.CancellationToken.IsCancellationRequested)
+                    //    {
+                    //        return;
+                    //    }
 
-                        ps.AddScript(line);
+                    //    ps.AddScript(line);
 
-                        var pipelineObjects = await ps.InvokeAsync();
+                    //    var pipelineObjects = await ps.InvokeAsync();
 
-                        ps.Commands.Clear();
-                    }
+                    //    ps.Commands.Clear();
+                    //}
                 }
             });
 

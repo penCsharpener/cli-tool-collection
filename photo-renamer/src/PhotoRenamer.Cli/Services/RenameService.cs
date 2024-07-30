@@ -4,20 +4,21 @@ using PhotoRename.Common.Models;
 using PhotoRename.Common.Services.Abstractions;
 using PhotoRenamer.Cli.Models;
 using PhotoRenamer.Cli.Services.Abstractions;
-using SixLabors.ImageSharp;
 
 namespace PhotoRenamer.Cli.Services;
 
 public class RenameService : IRenameService
 {
     private readonly IHostEnvironment _hostEnvironment;
+    private readonly IFileNameDetectorFactory _fileNameDetectorFactory;
     private readonly IFileService _fileService;
 
-    public RenameService(IHostEnvironment hostEnvironment, IFileService fileService)
+    public RenameService(IHostEnvironment hostEnvironment, IFileNameDetectorFactory fileNameDetectorFactory, IFileService fileService)
     {
         Console.WriteLine(hostEnvironment.ContentRootPath);
 
         _hostEnvironment = hostEnvironment;
+        _fileNameDetectorFactory = fileNameDetectorFactory;
         _fileService = fileService;
     }
 
@@ -33,7 +34,7 @@ public class RenameService : IRenameService
         }
     }
 
-    public static async IAsyncEnumerable<RenamePair> FilterRenameableFiles(IEnumerable<string> files, [EnumeratorCancellation] CancellationToken stoppingToken)
+    public async IAsyncEnumerable<RenamePair> FilterRenameableFiles(IEnumerable<string> files, [EnumeratorCancellation] CancellationToken stoppingToken)
     {
         foreach (var file in files)
         {
@@ -42,50 +43,17 @@ public class RenameService : IRenameService
                 break;
             }
 
-            var fileName = Path.GetFileNameWithoutExtension(file);
-            var fileExtensions = Path.GetExtension(file);
+            var fileName = new FileName(file);
+            var result = await _fileNameDetectorFactory.GetDetector(fileName).GetRenamePair(stoppingToken);
 
-            if (fileName.StartsWith("IMG_") || fileName.StartsWith("HIC_"))
+            if (result is null)
             {
-                if (fileName.Length == 22)
-                {
-                    var newFileName = string.Concat(fileName.AsSpan(4, 15), "_IMG");
-                    yield return new(file, newFileName + fileExtensions);
-                }
-
-                if (fileName.Length == 8)
-                {
-                    using var image = await Image.LoadAsync(file, stoppingToken);
-                    var exif = image.Metadata.ExifProfile;
-                    var creationDateTag = exif.GetValue(SixLabors.ImageSharp.Metadata.Profiles.Exif.ExifTag.DateTimeOriginal);
-                    var creationDateElements = creationDateTag.Value.Split(':', StringSplitOptions.RemoveEmptyEntries);
-                    var creationDateString = $"{creationDateElements[0]}-{creationDateElements[1]}-{creationDateElements[2]}:{creationDateElements[3]}:{creationDateElements[4]}";
-                    var creationDate = DateTime.Parse(creationDateString);
-
-                    yield return new(file, $"{creationDate:yyyyMMdd_HHmmss}_{fileName}{fileExtensions}");
-                }
-
-                if (fileName.Length > 22)
-                {
-                    var newFileName = string.Concat(fileName.AsSpan(4, 15), "_IMG", fileName.AsSpan()[22..]);
-                    yield return new(file, newFileName + fileExtensions);
-                }
+                continue;
             }
 
-            if (fileName.StartsWith("MVI_"))
-            {
-                var fi = new FileInfo(file);
-                var creationDate = fi.LastWriteTime;
+            yield return result;
 
-                yield return new(file, $"{creationDate:yyyyMMdd_HHmmss}_{fileName}{fileExtensions}");
-            }
-
-            if (fileName.StartsWith("VID_"))
-            {
-                var newFileName = string.Concat(fileName.AsSpan(4, 15), "_VID");
-
-                yield return new(file, newFileName + fileExtensions);
-            }
+            continue;
         }
     }
 
