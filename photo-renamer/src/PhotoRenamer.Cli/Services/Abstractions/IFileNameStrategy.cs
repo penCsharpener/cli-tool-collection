@@ -2,7 +2,7 @@
 
 namespace PhotoRenamer.Cli.Services.Abstractions;
 
-public interface IFileNameDetector
+public interface IFileNameStrategy
 {
     Task<RenamePair?> GetRenamePair(CancellationToken token);
 }

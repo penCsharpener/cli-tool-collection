@@ -12,4 +12,7 @@ public class RenameParameters : ICommandParameterSet
 
     [Option('x', Description = "Executes the renaming command after printing it. Only supported with powershell.")]
     public bool ExecuteRename { get; set; }
+
+    [Option('v', Description = "Prints version of program.")]
+    public bool PrintVersion { get; set; }
 }

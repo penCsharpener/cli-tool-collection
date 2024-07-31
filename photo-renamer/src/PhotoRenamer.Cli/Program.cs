@@ -42,27 +42,36 @@ public static class Program
                     cmdList.Add(line);
                 }
 
+                if (options.PrintVersion)
+                {
+                    Console.WriteLine("1.0.0.0");
+                }
+
                 if (options.ExecuteRename && !options.PreferCmd)
                 {
-                    //using var ps = System.Management.Automation.PowerShell.Create();
+                    using var ps = System.Management.Automation.PowerShell.Create();
 
-                    //foreach (var line in cmdList)
-                    //{
-                    //    if (context.CancellationToken.IsCancellationRequested)
-                    //    {
-                    //        return;
-                    //    }
+                    foreach (var line in cmdList)
+                    {
+                        if (context.CancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
 
-                    //    ps.AddScript(line);
+                        ps.AddScript(line);
 
-                    //    var pipelineObjects = await ps.InvokeAsync();
+                        var pipelineObjects = await ps.InvokeAsync();
 
-                    //    ps.Commands.Clear();
-                    //}
+                        ps.Commands.Clear();
+                    }
                 }
             });
 
             app.Run();
+        }
+        catch (TaskCanceledException)
+        {
+            Console.WriteLine("Operation cancelled.");
         }
         catch (Exception ex)
         {
@@ -79,6 +88,8 @@ public static class Program
         services.Host.UseSerilog();
         services.Services.AddTransient<IRenameService, RenameService>();
         services.Services.AddTransient<IFileService, FileService>();
+        services.Services.AddScoped<IImageSharpWrapper, ImageSharpWrapper>();
+        services.Services.AddScoped<IFileNameStrategyFactory, FileNameStrategyFactory>();
 
         return services;
     }

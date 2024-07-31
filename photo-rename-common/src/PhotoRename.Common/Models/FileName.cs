@@ -1,10 +1,16 @@
 ﻿namespace PhotoRename.Common.Models;
 
-public record FileName(string Name, string FileExtension)
+public record FileName
 {
-    public FileName(string fileName) : this(Path.GetFileNameWithoutExtension(fileName), Path.GetExtension(fileName))
+    public FileName(string fileName)
     {
+        Name = Path.GetFileNameWithoutExtension(fileName);
+        FileExtension = Path.GetExtension(fileName);
+        FullPath = fileName;
     }
 
-    public string FullName => Name + "." + FileExtension;
+    public string FullName => Name + FileExtension;
+    public string Name { get; }
+    public string FileExtension { get; }
+    public string FullPath { get; }
 }

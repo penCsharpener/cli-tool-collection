@@ -10,10 +10,10 @@ namespace PhotoRenamer.Cli.Services;
 public class RenameService : IRenameService
 {
     private readonly IHostEnvironment _hostEnvironment;
-    private readonly IFileNameDetectorFactory _fileNameDetectorFactory;
+    private readonly IFileNameStrategyFactory _fileNameDetectorFactory;
     private readonly IFileService _fileService;
 
-    public RenameService(IHostEnvironment hostEnvironment, IFileNameDetectorFactory fileNameDetectorFactory, IFileService fileService)
+    public RenameService(IHostEnvironment hostEnvironment, IFileNameStrategyFactory fileNameDetectorFactory, IFileService fileService)
     {
         Console.WriteLine(hostEnvironment.ContentRootPath);
 
@@ -44,9 +44,14 @@ public class RenameService : IRenameService
             }
 
             var fileName = new FileName(file);
-            var result = await _fileNameDetectorFactory.GetDetector(fileName).GetRenamePair(stoppingToken);
+            var result = await _fileNameDetectorFactory.GetStrategy(fileName).GetRenamePair(stoppingToken);
 
             if (result is null)
+            {
+                continue;
+            }
+
+            if (result.FileInfo.Name.Equals(result.NewFileName, StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }

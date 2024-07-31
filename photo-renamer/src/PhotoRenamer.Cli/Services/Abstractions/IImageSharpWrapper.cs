@@ -1,4 +1,4 @@
-﻿namespace PhotoRenamer.Cli.Services;
+﻿namespace PhotoRenamer.Cli.Services.Abstractions;
 
 public interface IImageSharpWrapper
 {

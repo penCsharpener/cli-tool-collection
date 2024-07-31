@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp;
+﻿using PhotoRenamer.Cli.Services.Abstractions;
+using SixLabors.ImageSharp;
 
 namespace PhotoRenamer.Cli.Services;
 
