@@ -20,14 +20,20 @@ public class FileNameStrategyFactoryTests
 
     [Theory]
     [InlineData("IMG_3993.jpg", typeof(CanonImageStrategy))]
+    [InlineData("20240706_172000 IMG_3993.jpg", typeof(DefaultNameStrategy))]
     [InlineData("HIC_3993.jpg", typeof(NikonFileNameStrategy))]
-    [InlineData("MVI_3993.jpg", typeof(CanonVideoStrategy))]
+    [InlineData("MVI_3993.mp4", typeof(CanonVideoStrategy))]
+    [InlineData("20240706_172000 MVI_3993.mp4", typeof(DefaultNameStrategy))]
+    [InlineData("20240706_172000476_IMG name tag.jpg", typeof(MillisecondsNameStrategy))]
+    [InlineData("20240706_172000476_VID name tag.mp4", typeof(MillisecondsNameStrategy))]
     [InlineData("IMG_20240706_172000476 name tag.jpg", typeof(MotorolaImageStrategy))]
     [InlineData("IMG_20240706_172000476.jpg", typeof(MotorolaImageStrategy))]
+    [InlineData("IMG_20240706_172000476.webp", typeof(MotorolaImageStrategy))]
     [InlineData("IMG_20240706_171903698_HDR.jpg", typeof(MotorolaImageStrategy))]
     [InlineData("IMG_20240706_171903698_HDR name tag.jpg", typeof(MotorolaImageStrategy))]
-    [InlineData("VID_20240706_172000476.jpg", typeof(MotorolaVideoStrategy))]
-    [InlineData("VID_20240706_172000476 name tag.jpg", typeof(MotorolaVideoStrategy))]
+    [InlineData("VID_20240706_172000476.mp4", typeof(MotorolaVideoStrategy))]
+    [InlineData("VID_20240706_172000476.mov", typeof(MotorolaVideoStrategy))]
+    [InlineData("VID_20240706_172000476 name tag.mp4", typeof(MotorolaVideoStrategy))]
     public void Factory_Finds_Right_Type_For_File(string fileName, Type expected)
     {
         var fileNameRecord = new FileName(fileName);

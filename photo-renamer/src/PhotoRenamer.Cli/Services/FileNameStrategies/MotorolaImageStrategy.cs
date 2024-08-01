@@ -18,7 +18,8 @@ public class MotorolaImageStrategy : IFileNameStrategy
     {
         var matches = _regex.Match(_fileName.Name);
         var values = matches.Groups.Values.ToArray();
-        var newFileName = string.Concat(values[2], "_IMG", values[3]);
+
+        var newFileName = string.Concat(values[2].ValueSpan[..^3].ToString(), "_IMG", values[3]);
         return Task.FromResult<RenamePair?>(new(_fileName.FullName, newFileName + _fileName.FileExtension));
     }
 }

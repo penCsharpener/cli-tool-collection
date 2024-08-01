@@ -7,6 +7,7 @@ public class DefaultNameStrategy : IFileNameStrategy
 {
     private readonly FileName _fileName;
 
+
     public DefaultNameStrategy(FileName fileName)
     {
         _fileName = fileName;

@@ -44,7 +44,7 @@ public static class Program
 
                 if (options.PrintVersion)
                 {
-                    Console.WriteLine("1.0.0.0");
+                    Console.WriteLine("1.0.1");
                 }
 
                 if (options.ExecuteRename && !options.PreferCmd)

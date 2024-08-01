@@ -22,6 +22,8 @@ public class RenameServiceTests
                     "IMG_1234.JPG",
                     "IMG_2345 with tags.JPG",
                     "VID_20240730_111213999.MP4",
+                    "20240730_111223999_VID.MP4",
+                    "20240730_111233_VID.MP4",
                     "IMG_20240706_171900970_HDR.JPG",
                     "IMG_20240708_150142259.jpg",
                     "IMG_20240706_171900970_HDR with tag.JPG",
@@ -77,13 +79,14 @@ public class RenameServiceTests
 
         list.Should().BeEquivalentTo(new[]
         {
-            @"Rename-Item -Path ""IMG_1234.JPG"" -NewName ""20240730_111213_IMG_1234.JPG""",
-            @"Rename-Item -Path ""IMG_2345 with tags.JPG"" -NewName ""20240730_111213_IMG_2345 with tags.JPG""",
+            @"Rename-Item -Path ""IMG_1234.JPG"" -NewName ""20240730_111213 IMG_1234.JPG""",
+            @"Rename-Item -Path ""IMG_2345 with tags.JPG"" -NewName ""20240730_111213 IMG_2345 with tags.JPG""",
             @"Rename-Item -Path ""VID_20240730_111213999.MP4"" -NewName ""20240730_111213_VID.MP4""",
-            @"Rename-Item -Path ""IMG_20240706_171900970_HDR.JPG"" -NewName ""20240706_171900970_IMG_HDR.JPG""",
-            @"Rename-Item -Path ""IMG_20240708_150142259.jpg"" -NewName ""20240708_150142259_IMG.jpg""",
-            @"Rename-Item -Path ""IMG_20240706_171900970_HDR with tag.JPG"" -NewName ""20240706_171900970_IMG_HDR with tag.JPG""",
-            @"Rename-Item -Path ""IMG_20240708_150142259 with tag.jpg"" -NewName ""20240708_150142259_IMG with tag.jpg"""
+            @"Rename-Item -Path ""20240730_111223999_VID.MP4"" -NewName ""20240730_111223_VID.MP4""",
+            @"Rename-Item -Path ""IMG_20240706_171900970_HDR.JPG"" -NewName ""20240706_171900_IMG_HDR.JPG""",
+            @"Rename-Item -Path ""IMG_20240708_150142259.jpg"" -NewName ""20240708_150142_IMG.jpg""",
+            @"Rename-Item -Path ""IMG_20240706_171900970_HDR with tag.JPG"" -NewName ""20240706_171900_IMG_HDR with tag.JPG""",
+            @"Rename-Item -Path ""IMG_20240708_150142259 with tag.jpg"" -NewName ""20240708_150142_IMG with tag.jpg""",
         });
     }
 }
