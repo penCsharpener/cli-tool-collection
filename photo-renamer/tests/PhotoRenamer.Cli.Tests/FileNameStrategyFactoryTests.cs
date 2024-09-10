@@ -10,10 +10,9 @@ public class FileNameStrategyFactoryTests
     private readonly FileNameStrategyFactory _sut;
     private readonly IImageSharpWrapper _imageSharpWrapper;
 
-
     public FileNameStrategyFactoryTests()
     {
-        _imageSharpWrapper = Substitute.For<ImageSharpWrapper>();
+        _imageSharpWrapper = Substitute.For<IImageSharpWrapper>();
 
         _sut = new FileNameStrategyFactory(_imageSharpWrapper);
     }
@@ -34,6 +33,7 @@ public class FileNameStrategyFactoryTests
     [InlineData("VID_20240706_172000476.mp4", typeof(MotorolaVideoStrategy))]
     [InlineData("VID_20240706_172000476.mov", typeof(MotorolaVideoStrategy))]
     [InlineData("VID_20240706_172000476 name tag.mp4", typeof(MotorolaVideoStrategy))]
+    [InlineData("P1010108.JPG", typeof(PanasonicImageStrategy))]
     public void Factory_Finds_Right_Type_For_File(string fileName, Type expected)
     {
         var fileNameRecord = new FileName(fileName);
@@ -41,5 +41,38 @@ public class FileNameStrategyFactoryTests
         var result = _sut.GetStrategy(fileNameRecord);
 
         result.GetType().Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("IMG_3993.jpg", "20240730_111213 IMG_3993.jpg", typeof(CanonImageStrategy))]
+    [InlineData("IMG_3993 name tag.jpg", "20240730_111213 IMG_3993 name tag.jpg", typeof(CanonImageStrategy))]
+    [InlineData("MVI_3993.mp4", "16010101_010000 MVI_3993.mp4", typeof(CanonVideoStrategy))]
+    [InlineData("MVI_3993 name tag.mp4", "16010101_010000 MVI_3993 name tag.mp4", typeof(CanonVideoStrategy))]
+    [InlineData("IMG_20240706_172000476 name tag.jpg", "20240706_172000_IMG name tag.jpg", typeof(MotorolaImageStrategy))]
+    [InlineData("IMG_20240706_172000476.jpg", "20240706_172000_IMG.jpg", typeof(MotorolaImageStrategy))]
+    [InlineData("20240706_172000 IMG_3993.jpg", "20240706_172000 IMG_3993.jpg", typeof(DefaultNameStrategy))]
+    [InlineData("20240706_172000 IMG_3993 name tag.jpg", "20240706_172000 IMG_3993 name tag.jpg", typeof(DefaultNameStrategy))]
+    [InlineData("20240706_172000_IMG.jpg", "20240706_172000_IMG.jpg", typeof(DefaultNameStrategy))]
+    [InlineData("IMG_20140829_211913.webp", "20140829_211913_IMG.webp", typeof(MotorolaImageStrategy))]
+    [InlineData("IMG_20140829_211913012.webp", "20140829_211913_IMG.webp", typeof(MotorolaImageStrategy))]
+    [InlineData("VID_20240706_172000476 name tag.mp4", "20240706_172000_VID name tag.mp4", typeof(MotorolaVideoStrategy))]
+    [InlineData("VID_20240706_172000476.mp4", "20240706_172000_VID.mp4", typeof(MotorolaVideoStrategy))]
+    [InlineData("HIC_3993.jpg", "20240730_111213 HIC_3993.jpg", typeof(NikonFileNameStrategy))]
+    [InlineData("HIC_3993 name tag.jpg", "20240730_111213 HIC_3993 name tag.jpg", typeof(NikonFileNameStrategy))]
+    [InlineData("P1010108.jpg", "20240730_111213_P1010108.jpg", typeof(PanasonicImageStrategy))]
+    [InlineData("P1010108 name tag.jpg", "20240730_111213_P1010108 name tag.jpg", typeof(PanasonicImageStrategy))]
+    public async Task Factory_Transforms_FileName_Correctly(string fileName, string expected, Type expectedStrategy)
+    {
+        var fileNameRecord = new FileName(fileName);
+        _imageSharpWrapper.GetCreationDate(Arg.Any<string>(), CancellationToken.None).Returns(new DateTime(2024, 07, 30, 11, 12, 13));
+
+        var strategy = _sut.GetStrategy(fileNameRecord);
+
+        strategy.Should().BeOfType(expectedStrategy);
+
+        var result = await strategy.GetRenamePair(CancellationToken.None);
+
+        result.Should().NotBeNull();
+        result!.NewFileName.Should().Be(expected);
     }
 }

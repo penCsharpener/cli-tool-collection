@@ -7,7 +7,7 @@ namespace PhotoRenamer.Cli.Services.FileNameStrategies;
 public class MotorolaVideoStrategy : IFileNameStrategy
 {
     private readonly FileName _fileName;
-    private static readonly Regex _regex = new("(VID_)(\\d{8}_\\d{9})(.*)");
+    private static readonly Regex _regex = new("(^VID_)(\\d{8}_\\d{9})(.*)");
 
     public MotorolaVideoStrategy(FileName fileName)
     {

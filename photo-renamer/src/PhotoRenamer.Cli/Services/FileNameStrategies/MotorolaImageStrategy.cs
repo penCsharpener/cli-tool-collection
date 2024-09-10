@@ -7,7 +7,7 @@ namespace PhotoRenamer.Cli.Services.FileNameStrategies;
 public class MotorolaImageStrategy : IFileNameStrategy
 {
     private readonly FileName _fileName;
-    private static readonly Regex _regex = new("(IMG_)(\\d{8}_\\d{9})(.*)");
+    private static readonly Regex _regex = new("(IMG_)(\\d{8}_\\d{6,9})(.*)");
 
     public MotorolaImageStrategy(FileName fileName)
     {
@@ -19,7 +19,19 @@ public class MotorolaImageStrategy : IFileNameStrategy
         var matches = _regex.Match(_fileName.Name);
         var values = matches.Groups.Values.ToArray();
 
-        var newFileName = string.Concat(values[2].ValueSpan[..^3].ToString(), "_IMG", values[3]);
+        var timestamp = string.Empty;
+
+        if (values[2].ValueSpan.Length == 15)
+        {
+            timestamp = values[2].ValueSpan.ToString();
+        }
+        else if (values[2].ValueSpan.Length == 18)
+        {
+            timestamp = values[2].ValueSpan[..^3].ToString();
+        }
+
+        var newFileName = string.Concat(timestamp, "_IMG", values[3]);
+
         return Task.FromResult<RenamePair?>(new(_fileName.FullName, newFileName + _fileName.FileExtension));
     }
 }
