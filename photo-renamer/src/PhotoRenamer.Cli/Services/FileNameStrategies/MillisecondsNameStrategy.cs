@@ -20,7 +20,7 @@ public class MillisecondsNameStrategy : IFileNameStrategy
         var values = matches.Groups.Values.ToArray();
 
         var newFileName = string.Concat(values[1].ValueSpan[..^3].ToString(), values[2]);
-        return Task.FromResult(new RenamePair(_fileName.FullName, $"{newFileName}{_fileName.FileExtension}"));
+        return Task.FromResult(new RenamePair(_fileName.FullPath, $"{newFileName}{_fileName.FileExtension}"));
     }
 }
 

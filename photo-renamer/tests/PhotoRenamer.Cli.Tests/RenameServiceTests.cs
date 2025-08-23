@@ -74,7 +74,7 @@ public class RenameServiceTests
         await foreach (var cmd in cmds)
         {
             Debug.WriteLine(cmd);
-            list.Add(cmd);
+            list.Add(cmd.PowershellRenameCommand);
         }
 
         list.Should().BeEquivalentTo(new[]
@@ -87,6 +87,48 @@ public class RenameServiceTests
             @"Rename-Item -Path ""IMG_20240708_150142259.jpg"" -NewName ""20240708_150142_IMG.jpg""",
             @"Rename-Item -Path ""IMG_20240706_171900970_HDR with tag.JPG"" -NewName ""20240706_171900_IMG_HDR with tag.JPG""",
             @"Rename-Item -Path ""IMG_20240708_150142259 with tag.jpg"" -NewName ""20240708_150142_IMG with tag.jpg""",
+        });
+    }
+
+    [Fact]
+    public async Task VideoOnly()
+    {
+        var cmds = _sut.GetNameCommandsAsync(new RenameParameters() { OnlyUseFilename = true, ExcludeVideos = true }, CancellationToken.None);
+        var list = new List<string>();
+
+        await foreach (var cmd in cmds)
+        {
+            Debug.WriteLine(cmd);
+            list.Add(cmd.PowershellRenameCommand);
+        }
+
+        list.Should().BeEquivalentTo(new[]
+        {
+            @"Rename-Item -Path ""IMG_1234.JPG"" -NewName ""20240730_111213 IMG_1234.JPG""",
+            @"Rename-Item -Path ""IMG_2345 with tags.JPG"" -NewName ""20240730_111213 IMG_2345 with tags.JPG""",
+            @"Rename-Item -Path ""IMG_20240706_171900970_HDR.JPG"" -NewName ""20240706_171900_IMG_HDR.JPG""",
+            @"Rename-Item -Path ""IMG_20240708_150142259.jpg"" -NewName ""20240708_150142_IMG.jpg""",
+            @"Rename-Item -Path ""IMG_20240706_171900970_HDR with tag.JPG"" -NewName ""20240706_171900_IMG_HDR with tag.JPG""",
+            @"Rename-Item -Path ""IMG_20240708_150142259 with tag.jpg"" -NewName ""20240708_150142_IMG with tag.jpg""",
+        });
+    }
+
+    [Fact]
+    public async Task ExifOnly()
+    {
+        var cmds = _sut.GetNameCommandsAsync(new RenameParameters() { OnlyUseFilename = true, ExifOnly = true }, CancellationToken.None);
+        var list = new List<string>();
+
+        await foreach (var cmd in cmds)
+        {
+            Debug.WriteLine(cmd);
+            list.Add(cmd.PowershellRenameCommand);
+        }
+
+        list.Should().BeEquivalentTo(new[]
+        {
+            @"Rename-Item -Path ""IMG_1234.JPG"" -NewName ""20240730_111213 IMG_1234.JPG""",
+            @"Rename-Item -Path ""IMG_2345 with tags.JPG"" -NewName ""20240730_111213 IMG_2345 with tags.JPG""",
         });
     }
 }

@@ -41,7 +41,7 @@ public class FileService : IFileService
 
     private static bool ExcludeFolders(string dir, string[] excludeDirs)
     {
-        return excludeDirs.Any(d => dir.Contains(d));
+        return excludeDirs.Any(dir.Contains);
     }
 
     private static IEnumerable<string> GetDirs(string subDir)

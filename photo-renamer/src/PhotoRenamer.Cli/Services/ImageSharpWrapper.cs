@@ -27,6 +27,7 @@ public class ImageSharpWrapper : IImageSharpWrapper
 
         var creationDateElements = creationDateTag.Value.Split(':', StringSplitOptions.RemoveEmptyEntries);
         var creationDateString = $"{creationDateElements[0]}-{creationDateElements[1]}-{creationDateElements[2]}:{creationDateElements[3]}:{creationDateElements[4]}";
+
         return DateTime.Parse(creationDateString);
     }
 }

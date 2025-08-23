@@ -4,5 +4,5 @@ namespace PhotoRenamer.Cli.Services.Abstractions;
 
 public interface IFileNameStrategyFactory
 {
-    IFileNameStrategy GetStrategy(FileName fileName);
+    IFileNameStrategy GetStrategy(FileName fileName, string? customRegex);
 }

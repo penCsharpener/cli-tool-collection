@@ -14,7 +14,7 @@ public class SamsungImageNameStrategy : IFileNameStrategy
 
     public Task<RenamePair> GetRenamePair(CancellationToken token)
     {
-        return Task.FromResult(new RenamePair(_fileName.FullName, $"{_fileName.Name}{_fileName.FileExtension}"));
+        return Task.FromResult(new RenamePair(_fileName.FullPath, $"{_fileName.Name}{_fileName.FileExtension}"));
     }
 }
 

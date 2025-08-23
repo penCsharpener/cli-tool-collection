@@ -22,6 +22,8 @@ public record RenamePair
     public FileInfo NewFileInfo { get; set; }
     public string CmdRenameCommand { get; private set; }
     public string PowershellRenameCommand { get; private set; }
+    public bool IsVideoFile { get; set; }
+    public bool UsedExifTimestamp { get; set; }
 
     public RenamePair ApplyOptions(bool onlyUseFileName)
     {

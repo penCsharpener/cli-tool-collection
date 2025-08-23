@@ -3,11 +3,11 @@ using PhotoRenamer.Cli.Services.Abstractions;
 
 namespace PhotoRenamer.Cli.Services.FileNameStrategies;
 
-public class CanonVideoStrategy : IFileNameStrategy
+public class CimgImageStrategy : IFileNameStrategy
 {
     private readonly FileName _fileName;
 
-    public CanonVideoStrategy(FileName fileName)
+    public CimgImageStrategy(FileName fileName)
     {
         _fileName = fileName;
     }

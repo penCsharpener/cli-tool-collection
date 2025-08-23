@@ -20,6 +20,6 @@ public class MotorolaVideoStrategy : IFileNameStrategy
         var values = matches.Groups.Values.ToArray();
 
         var newFileName = string.Concat(values[2].ValueSpan[..^3].ToString(), "_VID", values[3]);
-        return Task.FromResult<RenamePair?>(new(_fileName.FullName, newFileName + _fileName.FileExtension));
+        return Task.FromResult<RenamePair?>(new(_fileName.FullPath, newFileName + _fileName.FileExtension));
     }
 }

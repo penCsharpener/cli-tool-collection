@@ -33,32 +33,35 @@ public static class Program
 
             app.AddCommand(async (RenameParameters options, IRenameService renameService, CoconaAppContext context) =>
             {
+                if (options.PrintVersion)
+                {
+                    Console.WriteLine("1.0.5");
+                }
+
                 var cmdList = new List<string>();
+                var taskList = new List<Task>();
+
+                using var ps = System.Management.Automation.PowerShell.Create();
 
                 await foreach (var line in renameService.GetNameCommandsAsync(options, context.CancellationToken))
                 {
-                    Console.WriteLine(line);
+                    if (options.ExecuteRename)
+                    {
+                        Console.WriteLine($"\"{line.FileInfo.DirectoryName}\":   {line.FileInfo.Name} ==> {line.NewFileInfo.Name}");
+                    }
+                    else
+                    {
+                        Console.WriteLine(options.PreferCmd ? line.CmdRenameCommand : line.PowershellRenameCommand);
+                    }
 
-                    cmdList.Add(line);
-                }
-
-                if (options.PrintVersion)
-                {
-                    Console.WriteLine("1.0.1");
-                }
-
-                if (options.ExecuteRename && !options.PreferCmd)
-                {
-                    using var ps = System.Management.Automation.PowerShell.Create();
-
-                    foreach (var line in cmdList)
+                    if (options.ExecuteRename && !options.PreferCmd)
                     {
                         if (context.CancellationToken.IsCancellationRequested)
                         {
                             return;
                         }
 
-                        ps.AddScript(line);
+                        ps.AddScript(line.PowershellRenameCommand);
 
                         var pipelineObjects = await ps.InvokeAsync();
 
@@ -86,10 +89,10 @@ public static class Program
     public static CoconaAppBuilder AddServices(this CoconaAppBuilder services)
     {
         services.Host.UseSerilog();
-        services.Services.AddTransient<IRenameService, RenameService>();
-        services.Services.AddTransient<IFileService, FileService>();
-        services.Services.AddScoped<IImageSharpWrapper, ImageSharpWrapper>();
-        services.Services.AddScoped<IFileNameStrategyFactory, FileNameStrategyFactory>();
+        services.Services.AddSingleton<IRenameService, RenameService>();
+        services.Services.AddSingleton<IFileService, FileService>();
+        services.Services.AddSingleton<IImageSharpWrapper, ImageSharpWrapper>();
+        services.Services.AddSingleton<IFileNameStrategyFactory, FileNameStrategyFactory>();
 
         return services;
     }

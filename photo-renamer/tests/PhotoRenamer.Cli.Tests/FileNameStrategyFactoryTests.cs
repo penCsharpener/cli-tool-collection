@@ -9,6 +9,7 @@ public class FileNameStrategyFactoryTests
 {
     private readonly FileNameStrategyFactory _sut;
     private readonly IImageSharpWrapper _imageSharpWrapper;
+    private readonly string _customRegex = "^\\d{3}_\\d{8}";
 
     public FileNameStrategyFactoryTests()
     {
@@ -34,11 +35,12 @@ public class FileNameStrategyFactoryTests
     [InlineData("VID_20240706_172000476.mov", typeof(MotorolaVideoStrategy))]
     [InlineData("VID_20240706_172000476 name tag.mp4", typeof(MotorolaVideoStrategy))]
     [InlineData("P1010108.JPG", typeof(PanasonicImageStrategy))]
+    [InlineData("100_10205030.JPG", typeof(CustomRegexFormattingStrategy))]
     public void Factory_Finds_Right_Type_For_File(string fileName, Type expected)
     {
         var fileNameRecord = new FileName(fileName);
 
-        var result = _sut.GetStrategy(fileNameRecord);
+        var result = _sut.GetStrategy(fileNameRecord, _customRegex);
 
         result.GetType().Should().Be(expected);
     }
@@ -61,12 +63,13 @@ public class FileNameStrategyFactoryTests
     [InlineData("HIC_3993 name tag.jpg", "20240730_111213 HIC_3993 name tag.jpg", typeof(NikonFileNameStrategy))]
     [InlineData("P1010108.jpg", "20240730_111213_P1010108.jpg", typeof(PanasonicImageStrategy))]
     [InlineData("P1010108 name tag.jpg", "20240730_111213_P1010108 name tag.jpg", typeof(PanasonicImageStrategy))]
+    [InlineData("100_10205030.jpg", "20240730_111213 100_10205030.jpg", typeof(CustomRegexFormattingStrategy))]
     public async Task Factory_Transforms_FileName_Correctly(string fileName, string expected, Type expectedStrategy)
     {
         var fileNameRecord = new FileName(fileName);
         _imageSharpWrapper.GetCreationDate(Arg.Any<string>(), CancellationToken.None).Returns(new DateTime(2024, 07, 30, 11, 12, 13));
 
-        var strategy = _sut.GetStrategy(fileNameRecord);
+        var strategy = _sut.GetStrategy(fileNameRecord, _customRegex);
 
         strategy.Should().BeOfType(expectedStrategy);
 

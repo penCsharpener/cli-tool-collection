@@ -32,6 +32,6 @@ public class MotorolaImageStrategy : IFileNameStrategy
 
         var newFileName = string.Concat(timestamp, "_IMG", values[3]);
 
-        return Task.FromResult<RenamePair?>(new(_fileName.FullName, newFileName + _fileName.FileExtension));
+        return Task.FromResult<RenamePair?>(new(_fileName.FullPath, newFileName + _fileName.FileExtension));
     }
 }

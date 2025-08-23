@@ -22,19 +22,34 @@ public class RenameService : IRenameService
         _fileService = fileService;
     }
 
-    public async IAsyncEnumerable<string> GetNameCommandsAsync(RenameParameters options, [EnumeratorCancellation] CancellationToken stoppingToken)
+    public async IAsyncEnumerable<RenamePair> GetNameCommandsAsync(RenameParameters options, [EnumeratorCancellation] CancellationToken stoppingToken)
     {
-        var files = _fileService.GetFiles(_hostEnvironment.ContentRootPath, null).Where(f => !string.IsNullOrWhiteSpace(f) && FilterFiles(f)).ToList();
+        var files = _fileService.GetFiles(_hostEnvironment.ContentRootPath, null).Where(f => !string.IsNullOrWhiteSpace(f) && (FilterImageFiles(f) || FilterVideoFiles(f)));
 
-        await foreach (var file in FilterRenameableFiles(files, stoppingToken))
+        await foreach (var file in FilterRenameableFiles(files, options, stoppingToken))
         {
             file.ApplyOptions(options.OnlyUseFilename);
 
-            yield return options.PreferCmd ? file.CmdRenameCommand : file.PowershellRenameCommand;
+            if (options.VerboseLogging)
+            {
+                Console.WriteLine($"\t\t\t\t\tfile: {file.NewFileName}");
+            }
+
+            if (options.ExcludeVideos && file.IsVideoFile)
+            {
+                continue;
+            }
+
+            if (options.ExifOnly && !file.UsedExifTimestamp)
+            {
+                continue;
+            }
+
+            yield return file;
         }
     }
 
-    public async IAsyncEnumerable<RenamePair> FilterRenameableFiles(IEnumerable<string> files, [EnumeratorCancellation] CancellationToken stoppingToken)
+    public async IAsyncEnumerable<RenamePair> FilterRenameableFiles(IEnumerable<string> files, RenameParameters options, [EnumeratorCancellation] CancellationToken stoppingToken)
     {
         foreach (var file in files)
         {
@@ -44,7 +59,35 @@ public class RenameService : IRenameService
             }
 
             var fileName = new FileName(file);
-            var result = await _fileNameDetectorFactory.GetStrategy(fileName).GetRenamePair(stoppingToken);
+            var strategy = _fileNameDetectorFactory.GetStrategy(fileName, options.CustomRegex);
+
+            if (options.VerboseLogging)
+            {
+                Console.WriteLine($"\t\t\t\t\tfound file: {file}");
+                Console.WriteLine($"\t\t\t\t\tfilepath: {fileName.FullPath}");
+                Console.WriteLine($"\t\t\t\t\tfilename: {fileName.FullName}");
+                Console.WriteLine($"\t\t\t\t\tstrategy: {strategy.GetType().Name}");
+            }
+
+            RenamePair? result = null;
+
+            try
+            {
+                result = await strategy.GetRenamePair(stoppingToken);
+            }
+            catch (Exception ex)
+            {
+                if (!options.NoErrorLogging)
+                {
+                    Console.WriteLine($"\t\t\t\t\tstrategy exception: {ex}");
+                }
+            }
+
+            if (options.VerboseLogging)
+            {
+                Console.WriteLine($"\t\t\t\t\trename file: {result.FileInfo.FullName}");
+                Console.WriteLine($"\t\t\t\t\tnew rename file: {result.NewFileInfo.FullName}");
+            }
 
             if (result is null)
             {
@@ -56,16 +99,27 @@ public class RenameService : IRenameService
                 continue;
             }
 
+            if (FilterVideoFiles(result.FileInfo.Name))
+            {
+                result.IsVideoFile = true;
+            }
+
             yield return result;
 
             continue;
         }
     }
 
-    public bool FilterFiles(string file)
+    public bool FilterImageFiles(string file)
     {
         return file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
-        || file.EndsWith(".webp", StringComparison.OrdinalIgnoreCase)
-        || file.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+        || file.EndsWith(".webp", StringComparison.OrdinalIgnoreCase);
+    }
+
+    public bool FilterVideoFiles(string file)
+    {
+        return file.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)
+        || file.EndsWith(".mov", StringComparison.OrdinalIgnoreCase)
+        || file.EndsWith(".avi", StringComparison.OrdinalIgnoreCase);
     }
 }

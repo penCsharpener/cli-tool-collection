@@ -18,6 +18,6 @@ public class PanasonicImageStrategy : IFileNameStrategy
     {
         var creationDate = await _imageSharpWrapper.GetCreationDate(_fileName.FullPath, token);
 
-        return new(_fileName.FullName, $"{creationDate:yyyyMMdd_HHmmss}_{_fileName.Name}{_fileName.FileExtension}");
+        return new(_fileName.FullPath, $"{creationDate:yyyyMMdd_HHmmss}_{_fileName.Name}{_fileName.FileExtension}") { UsedExifTimestamp = true };
     }
 }
