@@ -21,9 +21,9 @@ public sealed partial class FileNameStrategyFactory : IFileNameStrategyFactory
     {
         if (!string.IsNullOrWhiteSpace(customRegex))
         {
-            _customRegex ??= new Regex(customRegex);
+            _customRegex ??= new Regex(customRegex,  RegexOptions.IgnoreCase);
 
-            if (_customRegex.IsMatch(fileName.Name))
+            if (_customRegex.IsMatch($"{fileName.Name}{fileName.FileExtension}"))
             {
                 return new CustomRegexFormattingStrategy(fileName, customRegex, _imageSharpWrapper);
             }
