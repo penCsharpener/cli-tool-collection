@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cocona" Version="2.2.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageReference Include="Cocona" />
+    <PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
   
   <ItemGroup>

@@ -7,10 +7,10 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Cocona" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Management.Infrastructure" Version="3.0.0" />
-    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.5" />
-    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageReference Include="Cocona" />
+    <PackageReference Include="Microsoft.Management.Infrastructure" />
+    <PackageReference Include="Microsoft.PowerShell.SDK" />
+    <PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
 
   <ItemGroup>
