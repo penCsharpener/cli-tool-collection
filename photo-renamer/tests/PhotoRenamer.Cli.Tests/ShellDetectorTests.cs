@@ -29,6 +29,6 @@ public class ShellDetectorTests
     {
         var pair = new RenamePair("/tmp/it's a.jpg", "new name.jpg").ApplyOptions(true);
 
-        pair.BashRenameCommand.Should().Be("mv -- 'it'\\''s a.jpg' 'new name.jpg'");
+        pair.BashRenameCommand.Should().Be("mv -n -- 'it'\\''s a.jpg' 'new name.jpg'");
     }
 }

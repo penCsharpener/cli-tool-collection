@@ -51,6 +51,9 @@ public class RenameService : IRenameService
 
     public async IAsyncEnumerable<RenamePair> FilterRenameableFiles(IEnumerable<string> files, RenameParameters options, [EnumeratorCancellation] CancellationToken stoppingToken)
     {
+        // full paths that are already taken by an earlier rename in this run
+        var claimedTargets = new HashSet<string>(OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+
         foreach (var file in files)
         {
             if (stoppingToken.IsCancellationRequested)
@@ -103,6 +106,22 @@ public class RenameService : IRenameService
                 }
 
                 result.IsAlreadyNamed = true;
+            }
+
+            // never produce a rename that would overwrite another file (e.g. photos that only differ in the removed milliseconds)
+            if (!result.IsAlreadyNamed && (!claimedTargets.Add(result.NewFileInfo.FullName) || File.Exists(result.NewFileInfo.FullName)))
+            {
+                if (!options.NoErrorLogging)
+                {
+                    Console.WriteLine($"\t\t\t\t\tskipped, target already exists: {result.FileInfo.Name} ==> {result.NewFileInfo.Name}");
+                }
+
+                continue;
+            }
+
+            if (result.IsAlreadyNamed)
+            {
+                claimedTargets.Add(result.NewFileInfo.FullName);
             }
 
             if (FilterVideoFiles(result.FileInfo.Name))

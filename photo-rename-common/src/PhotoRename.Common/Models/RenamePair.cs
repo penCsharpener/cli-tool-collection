@@ -14,7 +14,7 @@ public record RenamePair
 
         CmdRenameCommand = $"ren \"{oldNameFormat}\" \"{newNameFormat}\"";
         PowershellRenameCommand = $"Rename-Item -Path \"{oldNameFormat}\" -NewName \"{newNameFormat}\"";
-        BashRenameCommand = $"mv -- {BashQuote(oldNameFormat)} {BashQuote(newNameFormat)}";
+        BashRenameCommand = $"mv -n -- {BashQuote(oldNameFormat)} {BashQuote(newNameFormat)}";
     }
 
     public string OriginalFilePath { get; set; }
@@ -37,7 +37,7 @@ public record RenamePair
 
         CmdRenameCommand = $"ren \"{oldNameFormat}\" \"{newNameFormat}\"";
         PowershellRenameCommand = $"Rename-Item -Path \"{oldNameFormat}\" -NewName \"{newNameFormat}\"";
-        BashRenameCommand = $"mv -- {BashQuote(oldNameFormat)} {BashQuote(newNameFormat)}";
+        BashRenameCommand = $"mv -n -- {BashQuote(oldNameFormat)} {BashQuote(newNameFormat)}";
 
         return this;
     }
