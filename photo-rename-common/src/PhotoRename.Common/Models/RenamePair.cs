@@ -27,6 +27,9 @@ public record RenamePair
     public bool IsVideoFile { get; set; }
     public bool UsedExifTimestamp { get; set; }
 
+    /// <summary>The file already has the target name, so no rename is needed.</summary>
+    public bool IsAlreadyNamed { get; set; }
+
     public RenamePair ApplyOptions(bool onlyUseFileName)
     {
         var oldNameFormat = onlyUseFileName ? FileInfo.Name : FileInfo.FullName;

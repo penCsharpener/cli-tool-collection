@@ -50,4 +50,7 @@ public class RenameParameters : ICommandParameterSet
     [HasDefaultValue]
     [Option("webp-threads", Description = "Number of parallel webp conversions. 0 uses 3/4 of the CPU cores.")]
     public int WebpThreads { get; set; } = 0;
+
+    [Option("delete-original", Description = "Delete the original jpg after a successful webp conversion. Requires --webp and asks for confirmation.")]
+    public bool DeleteOriginal { get; set; }
 }

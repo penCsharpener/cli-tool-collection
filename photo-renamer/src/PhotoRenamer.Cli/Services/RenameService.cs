@@ -40,7 +40,7 @@ public class RenameService : IRenameService
                 continue;
             }
 
-            if (options.ExifOnly && !file.UsedExifTimestamp)
+            if (options.ExifOnly && !file.UsedExifTimestamp && !file.IsAlreadyNamed)
             {
                 continue;
             }
@@ -96,7 +96,13 @@ public class RenameService : IRenameService
 
             if (result.FileInfo.Name.Equals(result.NewFileName, StringComparison.OrdinalIgnoreCase))
             {
-                continue;
+                // nothing to rename, but jpgs still have to be handed on for the webp conversion
+                if (!options.ConvertToWebp || !IsJpeg(result.FileInfo.Name))
+                {
+                    continue;
+                }
+
+                result.IsAlreadyNamed = true;
             }
 
             if (FilterVideoFiles(result.FileInfo.Name))
@@ -108,6 +114,12 @@ public class RenameService : IRenameService
 
             continue;
         }
+    }
+
+    private static bool IsJpeg(string file)
+    {
+        return file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
+            || file.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
     }
 
     public bool FilterImageFiles(string file)
