@@ -14,6 +14,7 @@ public record RenamePair
 
         CmdRenameCommand = $"ren \"{oldNameFormat}\" \"{newNameFormat}\"";
         PowershellRenameCommand = $"Rename-Item -Path \"{oldNameFormat}\" -NewName \"{newNameFormat}\"";
+        BashRenameCommand = $"mv -- {BashQuote(oldNameFormat)} {BashQuote(newNameFormat)}";
     }
 
     public string OriginalFilePath { get; set; }
@@ -22,6 +23,7 @@ public record RenamePair
     public FileInfo NewFileInfo { get; set; }
     public string CmdRenameCommand { get; private set; }
     public string PowershellRenameCommand { get; private set; }
+    public string BashRenameCommand { get; private set; }
     public bool IsVideoFile { get; set; }
     public bool UsedExifTimestamp { get; set; }
 
@@ -32,7 +34,14 @@ public record RenamePair
 
         CmdRenameCommand = $"ren \"{oldNameFormat}\" \"{newNameFormat}\"";
         PowershellRenameCommand = $"Rename-Item -Path \"{oldNameFormat}\" -NewName \"{newNameFormat}\"";
+        BashRenameCommand = $"mv -- {BashQuote(oldNameFormat)} {BashQuote(newNameFormat)}";
 
         return this;
+    }
+
+    // Single quotes keep bash from expanding anything; backslashes become forward slashes for Git Bash on Windows paths.
+    private static string BashQuote(string value)
+    {
+        return "'" + value.Replace('\\', '/').Replace("'", "'\\''") + "'";
     }
 }

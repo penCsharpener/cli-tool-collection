@@ -41,7 +41,9 @@ public static class Program
                 var cmdList = new List<string>();
                 var taskList = new List<Task>();
 
-                using var ps = System.Management.Automation.PowerShell.Create();
+                var shell = ShellDetector.Resolve(options);
+
+                using var ps = shell == ShellType.PowerShell ? System.Management.Automation.PowerShell.Create() : null;
 
                 await foreach (var line in renameService.GetNameCommandsAsync(options, context.CancellationToken))
                 {
@@ -51,21 +53,34 @@ public static class Program
                     }
                     else
                     {
-                        Console.WriteLine(options.PreferCmd ? line.CmdRenameCommand : line.PowershellRenameCommand);
+                        Console.WriteLine(shell switch
+                        {
+                            ShellType.Bash => line.BashRenameCommand,
+                            ShellType.Cmd => line.CmdRenameCommand,
+                            _ => line.PowershellRenameCommand,
+                        });
                     }
 
-                    if (options.ExecuteRename && !options.PreferCmd)
+                    if (options.ExecuteRename && shell != ShellType.Cmd)
                     {
                         if (context.CancellationToken.IsCancellationRequested)
                         {
                             return;
                         }
 
-                        ps.AddScript(line.PowershellRenameCommand);
+                        if (ps is null)
+                        {
+                            // equivalent of 'mv' without spawning a shell; does not overwrite existing files
+                            File.Move(line.FileInfo.FullName, line.NewFileInfo.FullName);
+                        }
+                        else
+                        {
+                            ps.AddScript(line.PowershellRenameCommand);
 
-                        var pipelineObjects = await ps.InvokeAsync();
+                            var pipelineObjects = await ps.InvokeAsync();
 
-                        ps.Commands.Clear();
+                            ps.Commands.Clear();
+                        }
 
                         if (options.ConvertToWebp && IsJpeg(line.NewFileInfo.Name))
                         {

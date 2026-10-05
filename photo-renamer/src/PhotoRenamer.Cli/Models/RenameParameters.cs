@@ -12,7 +12,10 @@ public class RenameParameters : ICommandParameterSet
     [Option("cmd", Description = "Use Rename-Item instead of 'ren'.")]
     public bool PreferCmd { get; set; }
 
-    [Option('x', Description = "Executes the renaming command after printing it. Only supported with powershell.")]
+    [Option("bash", Description = "Use 'mv' (bash) commands. Detected automatically on non-Windows systems and in Git Bash.")]
+    public bool PreferBash { get; set; }
+
+    [Option('x', Description = "Executes the renaming command after printing it. Not supported with --cmd.")]
     public bool ExecuteRename { get; set; }
 
     [Option('v', Description = "Prints version of program.")]
