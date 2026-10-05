@@ -5,13 +5,13 @@ namespace PhotoRenamer.Cli.Services;
 
 public class WebpConverter : IWebpConverter
 {
-    public string? Convert(string sourcePath, int quality)
+    public WebpConversionResult Convert(string sourcePath, int quality)
     {
         var targetPath = Path.ChangeExtension(sourcePath, ".webp");
 
         if (File.Exists(targetPath))
         {
-            return null;
+            return new WebpConversionResult(targetPath, true, IsValidCopy(sourcePath, targetPath));
         }
 
         using var codec = SKCodec.Create(sourcePath) ?? throw new InvalidDataException($"Cannot decode image '{sourcePath}'.");
@@ -19,11 +19,37 @@ public class WebpConverter : IWebpConverter
         using var oriented = ApplyOrigin(decoded, codec.EncodedOrigin);
         using var image = SKImage.FromBitmap(oriented);
         using var data = image.Encode(SKEncodedImageFormat.Webp, quality);
-        using var output = File.Create(targetPath);
 
-        data.SaveTo(output);
+        using (var output = File.Create(targetPath))
+        {
+            data.SaveTo(output);
+        }
 
-        return targetPath;
+        return new WebpConversionResult(targetPath, false, IsValidCopy(sourcePath, targetPath));
+    }
+
+    private static bool IsValidCopy(string sourcePath, string webpPath)
+    {
+        try
+        {
+            using var source = SKCodec.Create(sourcePath);
+            using var webp = SKCodec.Create(webpPath);
+
+            if (source is null || webp is null || webp.EncodedFormat != SKEncodedImageFormat.Webp)
+            {
+                return false;
+            }
+
+            var (sw, sh) = (source.Info.Width, source.Info.Height);
+            var (ww, wh) = (webp.Info.Width, webp.Info.Height);
+
+            // the webp has the EXIF orientation baked in, so width and height may be swapped
+            return (sw == ww && sh == wh) || (sw == wh && sh == ww);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     // WebP written by SkiaSharp carries no EXIF, so the EXIF orientation is baked into the pixels.

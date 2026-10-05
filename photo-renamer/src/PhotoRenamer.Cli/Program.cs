@@ -36,7 +36,7 @@ public static class Program
             {
                 if (options.PrintVersion)
                 {
-                    Console.WriteLine("1.1.1");
+                    Console.WriteLine("1.1.4");
                 }
 
                 if (options.DeleteOriginal && !options.ConvertToWebp)
@@ -115,16 +115,25 @@ public static class Program
                     {
                         try
                         {
-                            var webpPath = webpConverter.Convert(source, options.WebpQuality);
-                            Console.WriteLine(webpPath is null
-                                ? $"\t\t\t\t\twebp already exists, skipped: {Path.GetFileName(source)}"
-                                : $"\t\t\t\t\twebp: {Path.GetFileName(webpPath)}");
+                            var result = webpConverter.Convert(source, options.WebpQuality);
+                            var name = Path.GetFileName(source);
 
-                            // only delete once the new file is verifiably there; an already existing webp is never trusted
-                            if (deleteOriginals && webpPath is not null && new FileInfo(webpPath).Length > 0)
+                            Console.WriteLine(result.AlreadyExisted
+                                ? $"\t\t\t\t\twebp already exists, not overwritten: {Path.GetFileName(result.WebpPath)}"
+                                : $"\t\t\t\t\twebp: {Path.GetFileName(result.WebpPath)}");
+
+                            // the original is only deleted if a valid webp (new or already existing) is verifiably there
+                            if (deleteOriginals)
                             {
-                                File.Delete(source);
-                                Console.WriteLine($"\t\t\t\t\tdeleted original: {Path.GetFileName(source)}");
+                                if (result.IsValid)
+                                {
+                                    File.Delete(source);
+                                    Console.WriteLine($"\t\t\t\t\tdeleted original: {name}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"\t\t\t\t\toriginal kept, webp is not a valid copy: {name}");
+                                }
                             }
                         }
                         catch (Exception ex) when (!options.NoErrorLogging)
