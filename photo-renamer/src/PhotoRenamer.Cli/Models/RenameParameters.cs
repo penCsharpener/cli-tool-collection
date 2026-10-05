@@ -46,4 +46,8 @@ public class RenameParameters : ICommandParameterSet
     [HasDefaultValue]
     [Option("webp-quality", Description = "WebP quality from 0 to 100, like the quality setting in XnConvert.")]
     public int WebpQuality { get; set; } = 70;
+
+    [HasDefaultValue]
+    [Option("webp-threads", Description = "Number of parallel webp conversions. 0 uses 3/4 of the CPU cores.")]
+    public int WebpThreads { get; set; } = 0;
 }

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Cocona;
 using Cocona.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,13 +36,14 @@ public static class Program
             {
                 if (options.PrintVersion)
                 {
-                    Console.WriteLine("1.0.5");
+                    Console.WriteLine("1.1.1");
                 }
 
                 var cmdList = new List<string>();
                 var taskList = new List<Task>();
 
                 var shell = ShellDetector.Resolve(options);
+                var webpSources = new List<string>();
 
                 using var ps = shell == ShellType.PowerShell ? System.Management.Automation.PowerShell.Create() : null;
 
@@ -84,12 +86,38 @@ public static class Program
 
                         if (options.ConvertToWebp && IsJpeg(line.NewFileInfo.Name))
                         {
-                            var webpPath = webpConverter.Convert(line.NewFileInfo.FullName, options.WebpQuality);
-                            Console.WriteLine(webpPath is null
-                                ? $"\t\t\t\t\twebp already exists, skipped: {line.NewFileInfo.Name}"
-                                : $"\t\t\t\t\twebp: {Path.GetFileName(webpPath)}");
+                            webpSources.Add(line.NewFileInfo.FullName);
                         }
                     }
+                }
+
+                if (webpSources.Count > 0)
+                {
+                    var threads = options.WebpThreads > 0 ? options.WebpThreads : Math.Max(1, Environment.ProcessorCount * 3 / 4);
+                    var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = threads, CancellationToken = context.CancellationToken };
+
+                    Console.WriteLine($"Converting {webpSources.Count} file(s) to webp using {threads} thread(s)");
+
+                    await Parallel.ForEachAsync(webpSources, parallelOptions, (source, _) =>
+                    {
+                        try
+                        {
+                            var webpPath = webpConverter.Convert(source, options.WebpQuality);
+                            Console.WriteLine(webpPath is null
+                                ? $"\t\t\t\t\twebp already exists, skipped: {Path.GetFileName(source)}"
+                                : $"\t\t\t\t\twebp: {Path.GetFileName(webpPath)}");
+                        }
+                        catch (Exception ex) when (!options.NoErrorLogging)
+                        {
+                            Console.WriteLine($"\t\t\t\t\twebp conversion failed for {Path.GetFileName(source)}: {ex.Message}");
+                        }
+                        catch (Exception)
+                        {
+                            // errors are suppressed by --no-err
+                        }
+
+                        return ValueTask.CompletedTask;
+                    });
                 }
             });
 

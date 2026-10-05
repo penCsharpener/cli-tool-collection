@@ -3,6 +3,7 @@
   <PropertyGroup>
     <UserSecretsId>dotnet-PhotoRenamer.Cli-26db1b43-1dd8-4f60-9363-bcb9657450b7</UserSecretsId>
     <OutputType>Exe</OutputType>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
