@@ -8,14 +8,14 @@ namespace PhotoRenamer.Cli.Tests;
 public class FileNameStrategyFactoryTests
 {
     private readonly FileNameStrategyFactory _sut;
-    private readonly IImageSharpWrapper _imageSharpWrapper;
+    private readonly IImageMetadataWrapper _imageMetadataWrapper;
     private readonly string _customRegex = "^\\d{3}_\\d{8}";
 
     public FileNameStrategyFactoryTests()
     {
-        _imageSharpWrapper = Substitute.For<IImageSharpWrapper>();
+        _imageMetadataWrapper = Substitute.For<IImageMetadataWrapper>();
 
-        _sut = new FileNameStrategyFactory(_imageSharpWrapper);
+        _sut = new FileNameStrategyFactory(_imageMetadataWrapper);
     }
 
     [Theory]
@@ -67,7 +67,7 @@ public class FileNameStrategyFactoryTests
     public async Task Factory_Transforms_FileName_Correctly(string fileName, string expected, Type expectedStrategy)
     {
         var fileNameRecord = new FileName(fileName);
-        _imageSharpWrapper.GetCreationDate(Arg.Any<string>(), CancellationToken.None).Returns(new DateTime(2024, 07, 30, 11, 12, 13));
+        _imageMetadataWrapper.GetCreationDate(Arg.Any<string>(), CancellationToken.None).Returns(new DateTime(2024, 07, 30, 11, 12, 13));
 
         var strategy = _sut.GetStrategy(fileNameRecord, _customRegex);
 

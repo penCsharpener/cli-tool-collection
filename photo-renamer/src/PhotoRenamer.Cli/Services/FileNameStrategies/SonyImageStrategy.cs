@@ -6,17 +6,17 @@ namespace PhotoRenamer.Cli.Services.FileNameStrategies;
 public class SonyImageStrategy : IFileNameStrategy
 {
     private readonly FileName _fileName;
-    private readonly IImageSharpWrapper _imageSharpWrapper;
+    private readonly IImageMetadataWrapper _imageMetadataWrapper;
 
-    public SonyImageStrategy(FileName fileName, IImageSharpWrapper imageSharpWrapper)
+    public SonyImageStrategy(FileName fileName, IImageMetadataWrapper imageMetadataWrapper)
     {
         _fileName = fileName;
-        _imageSharpWrapper = imageSharpWrapper;
+        _imageMetadataWrapper = imageMetadataWrapper;
     }
 
     public async Task<RenamePair?> GetRenamePair(CancellationToken token)
     {
-        var creationDate = await _imageSharpWrapper.GetCreationDate(_fileName.FullPath, token);
+        var creationDate = await _imageMetadataWrapper.GetCreationDate(_fileName.FullPath, token);
         
         return new(_fileName.FullPath, $"{creationDate:yyyyMMdd_HHmmss} {_fileName.Name}{_fileName.FileExtension}") { UsedExifTimestamp = true };
     }

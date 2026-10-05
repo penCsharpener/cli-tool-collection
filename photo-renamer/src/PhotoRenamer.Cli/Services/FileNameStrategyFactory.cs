@@ -9,12 +9,12 @@ namespace PhotoRenamer.Cli.Services;
 public sealed partial class FileNameStrategyFactory : IFileNameStrategyFactory
 {
     private readonly RenameParameters _options;
-    private readonly IImageSharpWrapper _imageSharpWrapper;
+    private readonly IImageMetadataWrapper _imageMetadataWrapper;
     private static Regex? _customRegex = null!;
 
-    public FileNameStrategyFactory(IImageSharpWrapper imageSharpWrapper)
+    public FileNameStrategyFactory(IImageMetadataWrapper imageMetadataWrapper)
     {
-        _imageSharpWrapper = imageSharpWrapper;
+        _imageMetadataWrapper = imageMetadataWrapper;
     }
 
     public IFileNameStrategy GetStrategy(FileName fileName, string? customRegex)
@@ -25,7 +25,7 @@ public sealed partial class FileNameStrategyFactory : IFileNameStrategyFactory
 
             if (_customRegex.IsMatch($"{fileName.Name}{fileName.FileExtension}"))
             {
-                return new CustomRegexFormattingStrategy(fileName, customRegex, _imageSharpWrapper);
+                return new CustomRegexFormattingStrategy(fileName, customRegex, _imageMetadataWrapper);
             }
         }
 
@@ -41,12 +41,12 @@ public sealed partial class FileNameStrategyFactory : IFileNameStrategyFactory
 
         if (CanonImageRegex().IsMatch(fileName.Name) && IsImage(fileName.FileExtension))
         {
-            return new CanonImageStrategy(fileName, _imageSharpWrapper);
+            return new CanonImageStrategy(fileName, _imageMetadataWrapper);
         }
 
         if (PanasonicImageRegex().IsMatch(fileName.Name) && IsImage(fileName.FileExtension))
         {
-            return new PanasonicImageStrategy(fileName, _imageSharpWrapper);
+            return new PanasonicImageStrategy(fileName, _imageMetadataWrapper);
         }
 
         if (CanonVideoRegex().IsMatch(fileName.Name) && IsVideo(fileName.FileExtension))
@@ -56,7 +56,7 @@ public sealed partial class FileNameStrategyFactory : IFileNameStrategyFactory
 
         if (NikonImageRegex().IsMatch(fileName.Name) && IsImage(fileName.FileExtension))
         {
-            return new NikonFileNameStrategy(fileName, _imageSharpWrapper);
+            return new NikonFileNameStrategy(fileName, _imageMetadataWrapper);
         }
 
         if (CimgImageRegex().IsMatch(fileName.Name) && IsImage(fileName.FileExtension))
@@ -66,17 +66,17 @@ public sealed partial class FileNameStrategyFactory : IFileNameStrategyFactory
 
         if (PicImageRegex().IsMatch(fileName.Name) && IsImage(fileName.FileExtension))
         {
-            return new PicImageStrategy(fileName, _imageSharpWrapper);
+            return new PicImageStrategy(fileName, _imageMetadataWrapper);
         }
 
         if (FujifilmImageRegex().IsMatch(fileName.Name) && IsImage(fileName.FileExtension))
         {
-            return new FujifilmImageStrategy(fileName, _imageSharpWrapper);
+            return new FujifilmImageStrategy(fileName, _imageMetadataWrapper);
         }
 
         if (SonyImageRegex().IsMatch(fileName.Name) && IsImage(fileName.FileExtension))
         {
-            return new SonyImageStrategy(fileName, _imageSharpWrapper);
+            return new SonyImageStrategy(fileName, _imageMetadataWrapper);
         }
 
         if (RemoveMillisecondsFileRegex().IsMatch(fileName.Name))

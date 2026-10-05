@@ -91,7 +91,7 @@ public static class Program
         services.Host.UseSerilog();
         services.Services.AddSingleton<IRenameService, RenameService>();
         services.Services.AddSingleton<IFileService, FileService>();
-        services.Services.AddSingleton<IImageSharpWrapper, ImageSharpWrapper>();
+        services.Services.AddSingleton<IImageMetadataWrapper, ImageMetadataWrapper>();
         services.Services.AddSingleton<IFileNameStrategyFactory, FileNameStrategyFactory>();
 
         return services;

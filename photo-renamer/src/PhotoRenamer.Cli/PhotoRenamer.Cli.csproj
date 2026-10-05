@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.Management.Infrastructure" />
     <PackageReference Include="Microsoft.PowerShell.SDK" />
     <PackageReference Include="Serilog.AspNetCore" />
-    <PackageReference Include="SixLabors.ImageSharp" />
+    <PackageReference Include="MetadataExtractor" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,11 +6,11 @@ namespace PhotoRenamer.Cli.Tests;
 
 public class PanasonicImageStrategyTests
 {
-    private readonly IImageSharpWrapper _imageSharpWrapper;
+    private readonly IImageMetadataWrapper _imageMetadataWrapper;
 
     public PanasonicImageStrategyTests()
     {
-        _imageSharpWrapper = Substitute.For<IImageSharpWrapper>();
+        _imageMetadataWrapper = Substitute.For<IImageMetadataWrapper>();
     }
 
     [Theory]
@@ -19,9 +19,9 @@ public class PanasonicImageStrategyTests
     public async Task Strategy_Renames_File(string fileName, string expected)
     {
         var fileNameRecord = new FileName(fileName);
-        _imageSharpWrapper.GetCreationDate(Arg.Any<string>(), CancellationToken.None).Returns(new DateTime(2024, 07, 30, 11, 12, 13));
+        _imageMetadataWrapper.GetCreationDate(Arg.Any<string>(), CancellationToken.None).Returns(new DateTime(2024, 07, 30, 11, 12, 13));
 
-        var sut = new PanasonicImageStrategy(fileNameRecord, _imageSharpWrapper);
+        var sut = new PanasonicImageStrategy(fileNameRecord, _imageMetadataWrapper);
 
         var result = await sut.GetRenamePair(CancellationToken.None);
 

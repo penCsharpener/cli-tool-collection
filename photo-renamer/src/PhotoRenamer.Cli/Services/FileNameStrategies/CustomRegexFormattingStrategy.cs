@@ -7,13 +7,13 @@ public class CustomRegexFormattingStrategy : IFileNameStrategy
 {
     private readonly FileName _fileName;
     private readonly string _customRegex;
-    private readonly IImageSharpWrapper _imageSharpWrapper;
+    private readonly IImageMetadataWrapper _imageMetadataWrapper;
 
-    public CustomRegexFormattingStrategy(FileName fileName, string customRegex, IImageSharpWrapper imageSharpWrapper)
+    public CustomRegexFormattingStrategy(FileName fileName, string customRegex, IImageMetadataWrapper imageMetadataWrapper)
     {
         _fileName = fileName;
         _customRegex = customRegex;
-        _imageSharpWrapper = imageSharpWrapper;
+        _imageMetadataWrapper = imageMetadataWrapper;
     }
 
     public async Task<RenamePair?> GetRenamePair(CancellationToken token)
@@ -22,7 +22,7 @@ public class CustomRegexFormattingStrategy : IFileNameStrategy
         
         try
         {
-            creationDate = await _imageSharpWrapper.GetCreationDate(_fileName.FullPath, token);
+            creationDate = await _imageMetadataWrapper.GetCreationDate(_fileName.FullPath, token);
         }
         catch (Exception _)
         {

@@ -12,7 +12,7 @@ public class RenameServiceTests
 {
     private readonly RenameService _sut;
     private readonly IFileService _fileService;
-    private readonly IImageSharpWrapper _imageSharpWrapper;
+    private readonly IImageMetadataWrapper _imageMetadataWrapper;
     private readonly IHostEnvironment _hostingEnvironment;
     private readonly IServiceProvider _serviceProvider;
 
@@ -32,7 +32,7 @@ public class RenameServiceTests
 
     public RenameServiceTests()
     {
-        _imageSharpWrapper = Substitute.For<IImageSharpWrapper>();
+        _imageMetadataWrapper = Substitute.For<IImageMetadataWrapper>();
         var services = new ServiceCollection()
             .AddScoped(_ =>
             {
@@ -43,7 +43,7 @@ public class RenameServiceTests
             })
             .AddScoped(_ =>
             {
-                var service = Substitute.For<IImageSharpWrapper>();
+                var service = Substitute.For<IImageMetadataWrapper>();
                 service.GetCreationDate(Arg.Any<string>(), CancellationToken.None).Returns(new DateTime(2024, 07, 30, 11, 12, 13));
 
                 return service;
