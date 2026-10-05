@@ -1,0 +1,44 @@
+<Solution>
+  <Folder Name="/Extensions/" />
+  <Folder Name="/Extensions/src/">
+    <Project Path="extensions/src/PenCsharpener.Extensions/PenCsharpener.Extensions.csproj" />
+  </Folder>
+  <Folder Name="/Extensions/tests/">
+    <Project Path="extensions/tests/PenCsharpener.Extensions.Tests/PenCsharpener.Extensions.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Mailing/" />
+  <Folder Name="/Mailing/src/">
+    <Project Path="mailing/src/PenCsharpener.Mailing.Common/PenCsharpener.Mailing.Common.csproj" />
+    <Project Path="mailing/src/PenCsharpener.Mailing.CsvMassMailer.Application/PenCsharpener.Mailing.CsvMassMailer.Application.csproj" />
+    <Project Path="mailing/src/PenCsharpener.Mailing.CsvMassMailer.Infrastructure/PenCsharpener.Mailing.CsvMassMailer.Infrastructure.csproj" />
+    <Project Path="mailing/src/PenCsharpener.Mailing.CsvMassMailer/PenCsharpener.Mailing.CsvMassMailer.csproj" />
+  </Folder>
+  <Folder Name="/Mailing/tests/">
+    <Project Path="mailing/tests/PenCsharpener.Mailing.Common.Tests/PenCsharpener.Mailing.Common.Tests.csproj" />
+    <Project Path="mailing/tests/PenCsharpener.Mailing.CsvMassMailer.Application.Tests/PenCsharpener.Mailing.CsvMassMailer.Application.Tests.csproj" />
+    <Project Path="mailing/tests/PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests/PenCsharpener.Mailing.CsvMassMailer.Infrastructure.Tests.csproj" />
+    <Project Path="mailing/tests/PenCsharpener.Mailing.CsvMassMailer.Tests/PenCsharpener.Mailing.CsvMassMailer.Tests.csproj" />
+  </Folder>
+  <Folder Name="/PhotoRename.Common/" />
+  <Folder Name="/PhotoRename.Common/src/">
+    <Project Path="photo-rename-common/src/PhotoRename.Common/PhotoRename.Common.csproj" />
+  </Folder>
+  <Folder Name="/PhotoRename.Common/tests/" />
+  <Folder Name="/PhotoRenamer/" />
+  <Folder Name="/PhotoRenamer/src/">
+    <Project Path="photo-renamer/src/PhotoRenamer.Cli/PhotoRenamer.Cli.csproj" />
+  </Folder>
+  <Folder Name="/PhotoRenamer/tests/">
+    <Project Path="photo-renamer/tests/PhotoRenamer.Cli.Tests/PhotoRenamer.Cli.Tests.csproj" />
+  </Folder>
+  <Folder Name="/PhotoTimestampShifter/" />
+  <Folder Name="/PhotoTimestampShifter/src/">
+    <Project Path="photo-timestamp-shifter/src/PhotoTimeStampShifter.Cli/PhotoTimeStampShifter.Cli.csproj" />
+  </Folder>
+  <Folder Name="/PhotoTimestampShifter/tests/" />
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+</Solution>
