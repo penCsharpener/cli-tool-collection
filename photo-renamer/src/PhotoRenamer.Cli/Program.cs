@@ -31,7 +31,7 @@ public static class Program
                 .AddServices()
                 .Build();
 
-            app.AddCommand(async (RenameParameters options, IRenameService renameService, CoconaAppContext context) =>
+            app.AddCommand(async (RenameParameters options, IRenameService renameService, IWebpConverter webpConverter, CoconaAppContext context) =>
             {
                 if (options.PrintVersion)
                 {
@@ -66,6 +66,14 @@ public static class Program
                         var pipelineObjects = await ps.InvokeAsync();
 
                         ps.Commands.Clear();
+
+                        if (options.ConvertToWebp && IsJpeg(line.NewFileInfo.Name))
+                        {
+                            var webpPath = webpConverter.Convert(line.NewFileInfo.FullName, options.WebpQuality);
+                            Console.WriteLine(webpPath is null
+                                ? $"\t\t\t\t\twebp already exists, skipped: {line.NewFileInfo.Name}"
+                                : $"\t\t\t\t\twebp: {Path.GetFileName(webpPath)}");
+                        }
                     }
                 }
             });
@@ -86,12 +94,19 @@ public static class Program
         }
     }
 
+    private static bool IsJpeg(string fileName)
+    {
+        return fileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
+            || fileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
+    }
+
     public static CoconaAppBuilder AddServices(this CoconaAppBuilder services)
     {
         services.Host.UseSerilog();
         services.Services.AddSingleton<IRenameService, RenameService>();
         services.Services.AddSingleton<IFileService, FileService>();
         services.Services.AddSingleton<IImageMetadataWrapper, ImageMetadataWrapper>();
+        services.Services.AddSingleton<IWebpConverter, WebpConverter>();
         services.Services.AddSingleton<IFileNameStrategyFactory, FileNameStrategyFactory>();
 
         return services;

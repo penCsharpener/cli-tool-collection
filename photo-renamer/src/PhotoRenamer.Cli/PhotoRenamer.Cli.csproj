@@ -11,6 +11,8 @@
     <PackageReference Include="Microsoft.PowerShell.SDK" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="MetadataExtractor" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
   </ItemGroup>
 
   <ItemGroup>

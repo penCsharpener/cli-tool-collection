@@ -36,4 +36,11 @@ public class RenameParameters : ICommandParameterSet
 
     [Option("no-err", Description = "Don't log errors.")]
     public bool NoErrorLogging { get; set; }
+
+    [Option("webp", Description = "Also convert renamed jpg files to webp (original is kept). Only performed together with -x.")]
+    public bool ConvertToWebp { get; set; }
+
+    [HasDefaultValue]
+    [Option("webp-quality", Description = "WebP quality from 0 to 100, like the quality setting in XnConvert.")]
+    public int WebpQuality { get; set; } = 70;
 }
