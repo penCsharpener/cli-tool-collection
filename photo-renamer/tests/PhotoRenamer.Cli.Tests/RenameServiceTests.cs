@@ -37,7 +37,7 @@ public class RenameServiceTests
             .AddScoped(_ =>
             {
                 var service = Substitute.For<IFileService>();
-                service.GetFiles(Arg.Any<string>(), Arg.Any<string[]>()).Returns(_fileNames);
+                service.GetFiles(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string[]>()).Returns(_fileNames);
 
                 return service;
             })

@@ -36,6 +36,16 @@ public static class ShellDetector
         return inBash ? ShellType.Bash : ShellType.PowerShell;
     }
 
+    public static string ChangeDirectoryCommand(ShellType shell, string directory)
+    {
+        return shell switch
+        {
+            ShellType.Bash => $"cd -- '{directory.Replace('\\', '/').Replace("'", "'\\''")}'",
+            ShellType.Cmd => $"cd /d \"{directory}\"",
+            _ => $"Set-Location -LiteralPath '{directory.Replace("'", "''")}'",
+        };
+    }
+
     private static bool IsBashLike(string? shellVariable)
     {
         var shellName = Path.GetFileNameWithoutExtension(shellVariable?.Replace('\\', '/') ?? string.Empty);

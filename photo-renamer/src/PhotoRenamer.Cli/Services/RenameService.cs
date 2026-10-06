@@ -24,7 +24,7 @@ public class RenameService : IRenameService
 
     public async IAsyncEnumerable<RenamePair> GetNameCommandsAsync(RenameParameters options, [EnumeratorCancellation] CancellationToken stoppingToken)
     {
-        var files = _fileService.GetFiles(_hostEnvironment.ContentRootPath, null).Where(f => !string.IsNullOrWhiteSpace(f) && (FilterImageFiles(f) || FilterVideoFiles(f)));
+        var files = _fileService.GetFiles(_hostEnvironment.ContentRootPath, options.Recursive, null).Where(f => !string.IsNullOrWhiteSpace(f) && (FilterImageFiles(f) || FilterVideoFiles(f)));
 
         await foreach (var file in FilterRenameableFiles(files, options, stoppingToken))
         {

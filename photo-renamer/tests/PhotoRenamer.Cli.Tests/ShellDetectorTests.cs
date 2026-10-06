@@ -31,4 +31,13 @@ public class ShellDetectorTests
 
         pair.BashRenameCommand.Should().Be("mv -n -- 'it'\\''s a.jpg' 'new name.jpg'");
     }
+
+    [Theory]
+    [InlineData(ShellType.Bash, "cd -- '/a/it'\\''s'")]
+    [InlineData(ShellType.PowerShell, "Set-Location -LiteralPath '/a/it''s'")]
+    [InlineData(ShellType.Cmd, "cd /d \"/a/it's\"")]
+    public void ChangeDirectoryCommand_Quotes_For_Each_Shell(ShellType shell, string expected)
+    {
+        ShellDetector.ChangeDirectoryCommand(shell, "/a/it's").Should().Be(expected);
+    }
 }

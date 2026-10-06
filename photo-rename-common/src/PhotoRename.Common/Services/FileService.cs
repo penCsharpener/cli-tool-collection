@@ -8,19 +8,24 @@ public class FileService : IFileService
 {
     public IEnumerable<string> GetFiles(string rootDir, params string[]? excludeDirs)
     {
+        return GetFiles(rootDir, true, excludeDirs);
+    }
+
+    public IEnumerable<string> GetFiles(string rootDir, bool recursive, string[]? excludeDirs)
+    {
         foreach (var f in GetFilesInDir(rootDir))
         {
             yield return f;
         }
 
-        foreach (var d in GetDirs(rootDir).Where(d => excludeDirs == null || ExcludeFolders(rootDir, excludeDirs)))
+        if (!recursive)
         {
-            foreach (var f in GetFilesInDir(d))
-            {
-                yield return f;
-            }
+            yield break;
+        }
 
-            foreach (var f in GetFiles(d, excludeDirs))
+        foreach (var d in GetDirs(rootDir).Where(d => excludeDirs == null || !ExcludeFolders(d, excludeDirs)))
+        {
+            foreach (var f in GetFiles(d, true, excludeDirs))
             {
                 yield return f;
             }

@@ -31,7 +31,7 @@ public class RenameParameters : ICommandParameterSet
     [Option("no-vid", Description = "Exclude videos when renaming.")]
     public bool ExcludeVideos { get; set; }
 
-    [Option('r', Description = "Include subfolders.")]
+    [Option('r', Description = "Include subfolders. Without it only the current folder is processed.")]
     public bool Recursive { get; set; }
 
     [Option('l', Description = "Verbose logging.")]

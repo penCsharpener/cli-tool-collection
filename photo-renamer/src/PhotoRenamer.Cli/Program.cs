@@ -36,7 +36,7 @@ public static class Program
             {
                 if (options.PrintVersion)
                 {
-                    Console.WriteLine("1.3.0");
+                    Console.WriteLine("1.3.1");
                 }
 
                 if (options.DeleteOriginal && !options.ConvertToWebp && !options.ConvertToH265)
@@ -62,6 +62,7 @@ public static class Program
                 var taskList = new List<Task>();
 
                 var shell = ShellDetector.Resolve(options);
+                var printedDirectory = Path.GetFullPath(Directory.GetCurrentDirectory());
                 var webpSources = new List<string>();
                 var videoSources = new List<(string Source, string Target)>();
 
@@ -96,6 +97,13 @@ public static class Program
                         }
                         else
                         {
+                            // with --of the commands only contain file names, so they have to be run in the file's folder
+                            if (options.OnlyUseFilename && !string.Equals(printedDirectory, line.FileInfo.DirectoryName, StringComparison.Ordinal))
+                            {
+                                printedDirectory = line.FileInfo.DirectoryName!;
+                                Console.WriteLine(ShellDetector.ChangeDirectoryCommand(shell, printedDirectory));
+                            }
+
                             Console.WriteLine(shell switch
                             {
                                 ShellType.Bash => line.BashRenameCommand,
@@ -118,7 +126,8 @@ public static class Program
                             }
                             else
                             {
-                                ps.AddScript(line.PowershellRenameCommand);
+                                // always full paths: with --of the printed command is relative and would fail for files in subfolders
+                                ps.AddScript($"Rename-Item -LiteralPath '{line.FileInfo.FullName.Replace("'", "''")}' -NewName '{line.NewFileInfo.Name.Replace("'", "''")}'");
 
                                 var pipelineObjects = await ps.InvokeAsync();
 
