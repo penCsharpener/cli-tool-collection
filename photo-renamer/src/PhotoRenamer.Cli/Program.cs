@@ -36,7 +36,7 @@ public static class Program
             {
                 if (options.PrintVersion)
                 {
-                    Console.WriteLine("1.4.0");
+                    Console.WriteLine("1.4.1");
                 }
 
                 if (options.DeleteOriginal && !options.ConvertToWebp && !options.ConvertToH265)

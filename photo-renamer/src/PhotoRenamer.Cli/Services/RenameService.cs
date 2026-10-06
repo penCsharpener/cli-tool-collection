@@ -150,6 +150,23 @@ public class RenameService : IRenameService
                 result.IsAlreadyNamed = true;
             }
 
+            // with --webp the final file is the .webp: skip if it exists already (unless --delete-original is set,
+            // which has to be able to clean up originals whose webp was created earlier)
+            if (options.ConvertToWebp && !options.DeleteOriginal && IsJpeg(result.FileInfo.Name))
+            {
+                var webpTarget = Path.ChangeExtension(result.NewFileInfo.FullName, ".webp");
+
+                if (File.Exists(webpTarget))
+                {
+                    if (!options.NoErrorLogging)
+                    {
+                        Console.WriteLine($"\t\t\t\t\tskipped, target already exists: {result.FileInfo.Name} ==> {Path.GetFileName(webpTarget)}");
+                    }
+
+                    continue;
+                }
+            }
+
             // never produce a rename that would overwrite another file (e.g. photos that only differ in the removed milliseconds).
             // Videos encoded with --h265 are not renamed but written as new .mp4 files; an existing output is handled by the converter.
             var isEncodedVideo = options.ConvertToH265 && FilterVideoFiles(result.FileInfo.Name);
