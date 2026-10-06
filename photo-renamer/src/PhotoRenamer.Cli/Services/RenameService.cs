@@ -99,8 +99,10 @@ public class RenameService : IRenameService
 
             if (result.FileInfo.Name.Equals(result.NewFileName, StringComparison.OrdinalIgnoreCase))
             {
-                // nothing to rename, but jpgs still have to be handed on for the webp conversion
-                if (!options.ConvertToWebp || !IsJpeg(result.FileInfo.Name))
+                // nothing to rename, but files that still have to be converted are handed on
+                var needsConversion = (options.ConvertToWebp && IsJpeg(result.FileInfo.Name)) || (options.ConvertToH265 && FilterVideoFiles(result.FileInfo.Name));
+
+                if (!needsConversion)
                 {
                     continue;
                 }
@@ -108,20 +110,24 @@ public class RenameService : IRenameService
                 result.IsAlreadyNamed = true;
             }
 
-            // never produce a rename that would overwrite another file (e.g. photos that only differ in the removed milliseconds)
-            if (!result.IsAlreadyNamed && (!claimedTargets.Add(result.NewFileInfo.FullName) || File.Exists(result.NewFileInfo.FullName)))
+            // never produce a rename that would overwrite another file (e.g. photos that only differ in the removed milliseconds).
+            // Videos encoded with --h265 are not renamed but written as new .mp4 files; an existing output is handled by the converter.
+            var isEncodedVideo = options.ConvertToH265 && FilterVideoFiles(result.FileInfo.Name);
+            var targetPath = isEncodedVideo ? Path.ChangeExtension(result.NewFileInfo.FullName, ".mp4") : result.NewFileInfo.FullName;
+
+            if (!result.IsAlreadyNamed && (!claimedTargets.Add(targetPath) || (!isEncodedVideo && File.Exists(targetPath))))
             {
                 if (!options.NoErrorLogging)
                 {
-                    Console.WriteLine($"\t\t\t\t\tskipped, target already exists: {result.FileInfo.Name} ==> {result.NewFileInfo.Name}");
+                    Console.WriteLine($"\t\t\t\t\tskipped, target already exists: {result.FileInfo.Name} ==> {Path.GetFileName(targetPath)}");
                 }
 
                 continue;
             }
 
-            if (result.IsAlreadyNamed)
+            if (result.IsAlreadyNamed && !isEncodedVideo)
             {
-                claimedTargets.Add(result.NewFileInfo.FullName);
+                claimedTargets.Add(targetPath);
             }
 
             if (FilterVideoFiles(result.FileInfo.Name))

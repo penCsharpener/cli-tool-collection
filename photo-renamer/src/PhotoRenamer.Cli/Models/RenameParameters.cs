@@ -51,6 +51,25 @@ public class RenameParameters : ICommandParameterSet
     [Option("webp-threads", Description = "Number of parallel webp conversions. 0 uses 3/4 of the CPU cores.")]
     public int WebpThreads { get; set; } = 0;
 
-    [Option("delete-original", Description = "Delete the original jpg after a successful webp conversion. Requires --webp and asks for confirmation.")]
+    [Option("delete-original", Description = "Delete the original file after a successful conversion (--webp / --h265). Asks for confirmation.")]
     public bool DeleteOriginal { get; set; }
+
+    [Option("h265", Description = "Encode videos to H.265 (NVENC, AAC audio) using ffmpeg from PATH. The encoded .mp4 gets the new name, the original keeps its name. Only performed together with -x.")]
+    public bool ConvertToH265 { get; set; }
+
+    [HasDefaultValue]
+    [Option("h265-cq", Description = "NVENC constant quality (lower is better quality).")]
+    public int H265Cq { get; set; } = 28;
+
+    [HasDefaultValue]
+    [Option("h265-preset", Description = "NVENC preset p1 (fastest) to p7 (best).")]
+    public string H265Preset { get; set; } = "p5";
+
+    [HasDefaultValue]
+    [Option("aac-bitrate", Description = "AAC audio bitrate in kbit/s.")]
+    public int AacBitrate { get; set; } = 192;
+
+    [HasDefaultValue]
+    [Option("h265-threads", Description = "Number of parallel video encodes (consumer GPUs limit concurrent NVENC sessions).")]
+    public int H265Threads { get; set; } = 2;
 }

@@ -30,19 +30,9 @@ public class WebpConverter : IWebpConverter
         }
 
         File.WriteAllBytes(targetPath, bytes);
-        CopyFileTimes(sourcePath, targetPath);
+        FileTimes.Copy(sourcePath, targetPath);
 
         return new WebpConversionResult(targetPath, false, IsValidCopy(sourcePath, targetPath));
-    }
-
-    private static void CopyFileTimes(string sourcePath, string targetPath)
-    {
-        var source = new FileInfo(sourcePath);
-
-        // creation time first: on Unix setting it also changes the write time, so the write time has to come after
-        File.SetCreationTimeUtc(targetPath, source.CreationTimeUtc);
-        File.SetLastAccessTimeUtc(targetPath, source.LastAccessTimeUtc);
-        File.SetLastWriteTimeUtc(targetPath, source.LastWriteTimeUtc);
     }
 
     private static bool IsValidCopy(string sourcePath, string webpPath)

@@ -32,17 +32,30 @@ public static class Program
                 .AddServices()
                 .Build();
 
-            app.AddCommand(async (RenameParameters options, IRenameService renameService, IWebpConverter webpConverter, CoconaAppContext context) =>
+            app.AddCommand(async (RenameParameters options, IRenameService renameService, IWebpConverter webpConverter, IVideoConverter videoConverter, CoconaAppContext context) =>
             {
                 if (options.PrintVersion)
                 {
-                    Console.WriteLine("1.1.6");
+                    Console.WriteLine("1.3.0");
                 }
 
-                if (options.DeleteOriginal && !options.ConvertToWebp)
+                if (options.DeleteOriginal && !options.ConvertToWebp && !options.ConvertToH265)
                 {
-                    Console.WriteLine("--delete-original requires --webp.");
+                    Console.WriteLine("--delete-original requires --webp and/or --h265.");
                     return;
+                }
+
+                if (options.ConvertToH265 && options.ExecuteRename)
+                {
+                    try
+                    {
+                        await videoConverter.EnsureToolsAvailableAsync(context.CancellationToken);
+                    }
+                    catch (Exception ex) when (ex is not OperationCanceledException)
+                    {
+                        Console.WriteLine($"--h265 needs ffmpeg and ffprobe: {ex.Message}");
+                        return;
+                    }
                 }
 
                 var cmdList = new List<string>();
@@ -50,12 +63,32 @@ public static class Program
 
                 var shell = ShellDetector.Resolve(options);
                 var webpSources = new List<string>();
+                var videoSources = new List<(string Source, string Target)>();
 
                 using var ps = shell == ShellType.PowerShell ? System.Management.Automation.PowerShell.Create() : null;
 
                 await foreach (var line in renameService.GetNameCommandsAsync(options, context.CancellationToken))
                 {
-                    if (!line.IsAlreadyNamed)
+                    // with --h265 the original video is never renamed: the encoded file gets the new name instead
+                    var encodeOnly = options.ConvertToH265 && IsVideo(line.FileInfo.Name);
+
+                    // files written by this tool carry a marker tag and are ignored
+                    if (encodeOnly && await videoConverter.IsConvertedAsync(line.FileInfo.FullName, context.CancellationToken))
+                    {
+                        if (options.VerboseLogging)
+                        {
+                            Console.WriteLine($"\t\t\t\t\tignored, already converted by PhotoRenamer: {line.FileInfo.Name}");
+                        }
+
+                        continue;
+                    }
+
+                    if (encodeOnly && !line.IsAlreadyNamed)
+                    {
+                        Console.WriteLine($"\"{line.FileInfo.DirectoryName}\":   {line.FileInfo.Name} ==> {Path.ChangeExtension(line.NewFileInfo.Name, ".mp4")} (encoded to H.265, original is kept)");
+                    }
+
+                    if (!line.IsAlreadyNamed && !encodeOnly)
                     {
                         if (options.ExecuteRename)
                         {
@@ -100,14 +133,19 @@ public static class Program
                     {
                         webpSources.Add(line.NewFileInfo.FullName);
                     }
+
+                    if (options.ExecuteRename && encodeOnly)
+                    {
+                        videoSources.Add((line.FileInfo.FullName, Path.ChangeExtension(line.NewFileInfo.FullName, ".mp4")));
+                    }
                 }
+
+                var deleteOriginals = (webpSources.Count + videoSources.Count) > 0 && ConfirmDeletion(options, webpSources.Count + videoSources.Count);
 
                 if (webpSources.Count > 0)
                 {
                     var threads = options.WebpThreads > 0 ? options.WebpThreads : Math.Max(1, Environment.ProcessorCount * 3 / 4);
                     var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = threads, CancellationToken = context.CancellationToken };
-
-                    var deleteOriginals = ConfirmDeletion(options, webpSources.Count);
 
                     Console.WriteLine($"Converting {webpSources.Count} file(s) to webp using {threads} thread(s)");
 
@@ -148,6 +186,58 @@ public static class Program
                         return ValueTask.CompletedTask;
                     });
                 }
+
+                if (videoSources.Count > 0)
+                {
+                    var encodeOptions = new VideoEncodeOptions(options.H265Cq, options.H265Preset, options.AacBitrate);
+                    var videoThreads = Math.Max(1, options.H265Threads);
+                    var videoParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = videoThreads, CancellationToken = context.CancellationToken };
+
+                    Console.WriteLine($"Encoding {videoSources.Count} video(s) to H.265 using {videoThreads} parallel encode(s)");
+
+                    await Parallel.ForEachAsync(videoSources, videoParallelOptions, async (item, token) =>
+                    {
+                        var (source, target) = item;
+                        var name = Path.GetFileName(source);
+
+                        try
+                        {
+                            var result = await videoConverter.ConvertAsync(source, target, encodeOptions, deleteOriginals, token);
+                            var outputName = Path.GetFileName(result.OutputPath);
+
+                            Console.WriteLine(result.Status switch
+                            {
+                                VideoConversionStatus.AlreadyExisted => $"\t\t\t\t\th265 already exists, not overwritten: {outputName}",
+                                VideoConversionStatus.AlreadyConverted => $"\t\t\t\t\tignored, already converted by PhotoRenamer: {name}",
+                                VideoConversionStatus.AlreadyHevc => $"\t\t\t\t\talready H.265, skipped: {name}",
+                                VideoConversionStatus.ReplacedSource => $"\t\t\t\t\th265 replaced original: {outputName}",
+                                _ => $"\t\t\t\t\th265: {name} ==> {outputName}",
+                            });
+
+                            // the original is only deleted if a valid H.265 file (new or already existing) is verifiably there
+                            if (deleteOriginals && result.Status is VideoConversionStatus.Converted or VideoConversionStatus.AlreadyExisted)
+                            {
+                                if (result.IsValid)
+                                {
+                                    File.Delete(source);
+                                    Console.WriteLine($"\t\t\t\t\tdeleted original: {name}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"\t\t\t\t\toriginal kept, h265 file is not a valid copy: {name}");
+                                }
+                            }
+                        }
+                        catch (Exception ex) when (ex is not OperationCanceledException && !options.NoErrorLogging)
+                        {
+                            Console.WriteLine($"\t\t\t\t\th265 encoding failed for {name}: {ex.Message}");
+                        }
+                        catch (Exception ex) when (ex is not OperationCanceledException)
+                        {
+                            // errors are suppressed by --no-err
+                        }
+                    });
+                }
             });
 
             app.Run();
@@ -179,7 +269,7 @@ public static class Program
             return false;
         }
 
-        Console.Write($"Delete the original jpg file(s) ({count}) after successful webp conversion? This cannot be undone. Type 'yes' to confirm: ");
+        Console.Write($"Delete the original file(s) ({count}) after successful conversion? This cannot be undone. Type 'yes' to confirm: ");
 
         if (string.Equals(Console.ReadLine()?.Trim(), "yes", StringComparison.OrdinalIgnoreCase))
         {
@@ -189,6 +279,13 @@ public static class Program
         Console.WriteLine("Not confirmed. Original files will be kept.");
 
         return false;
+    }
+
+    private static bool IsVideo(string fileName)
+    {
+        return fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)
+            || fileName.EndsWith(".mov", StringComparison.OrdinalIgnoreCase)
+            || fileName.EndsWith(".avi", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsJpeg(string fileName)
@@ -204,6 +301,7 @@ public static class Program
         services.Services.AddSingleton<IFileService, FileService>();
         services.Services.AddSingleton<IImageMetadataWrapper, ImageMetadataWrapper>();
         services.Services.AddSingleton<IWebpConverter, WebpConverter>();
+        services.Services.AddSingleton<IVideoConverter, FfmpegVideoConverter>();
         services.Services.AddSingleton<IFileNameStrategyFactory, FileNameStrategyFactory>();
 
         return services;
