@@ -1,3 +1,5 @@
+using Directory = System.IO.Directory;
+using MetadataExtractor;
 using PhotoRenamer.Cli.Services;
 using SkiaSharp;
 
@@ -49,6 +51,48 @@ public class WebpConverterTests : IDisposable
 
         second.AlreadyExisted.Should().BeTrue();
         second.IsValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Convert_Keeps_Exif_Resets_Orientation_And_Copies_File_Times()
+    {
+        var jpg = Path.Combine(_directory, "exif.jpg");
+        CreateJpeg(jpg, 40, 20);
+        InjectExif(jpg);
+        var modified = new DateTime(2020, 5, 6, 7, 8, 9, DateTimeKind.Utc);
+        File.SetCreationTimeUtc(jpg, modified.AddDays(-1)); // first: on Unix this also touches the write time
+        File.SetLastWriteTimeUtc(jpg, modified);
+
+        var result = new WebpConverter().Convert(jpg, 70);
+
+        result.IsValid.Should().BeTrue();
+        var directories = MetadataExtractor.ImageMetadataReader.ReadMetadata(result.WebpPath);
+        var ifd0 = directories.OfType<MetadataExtractor.Formats.Exif.ExifIfd0Directory>().Single();
+        ifd0.GetString(MetadataExtractor.Formats.Exif.ExifDirectoryBase.TagDateTime).Should().Be("2024:01:02 03:04:05");
+        ifd0.GetInt32(MetadataExtractor.Formats.Exif.ExifDirectoryBase.TagOrientation).Should().Be(1);
+        File.GetLastWriteTimeUtc(result.WebpPath).Should().Be(modified);
+
+        if (OperatingSystem.IsWindows())
+        {
+            File.GetCreationTimeUtc(result.WebpPath).Should().Be(modified.AddDays(-1));
+        }
+    }
+
+    // inserts an APP1/EXIF segment (orientation 6, DateTime) right after the JPEG SOI marker
+    private static void InjectExif(string path)
+    {
+        var tiff = new List<byte> { 0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00, 0x02, 0x00 };
+        tiff.AddRange(new byte[] { 0x12, 0x01, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00 });
+        tiff.AddRange(new byte[] { 0x32, 0x01, 0x02, 0x00, 0x14, 0x00, 0x00, 0x00, 0x26, 0x00, 0x00, 0x00 });
+        tiff.AddRange(new byte[] { 0, 0, 0, 0 });
+        tiff.AddRange(System.Text.Encoding.ASCII.GetBytes("2024:01:02 03:04:05\0"));
+
+        var payload = System.Text.Encoding.ASCII.GetBytes("Exif\0\0").Concat(tiff).ToArray();
+        var length = payload.Length + 2;
+        var segment = new byte[] { 0xFF, 0xE1, (byte)(length >> 8), (byte)length }.Concat(payload).ToArray();
+
+        var original = File.ReadAllBytes(path);
+        File.WriteAllBytes(path, original.Take(2).Concat(segment).Concat(original.Skip(2)).ToArray());
     }
 
     private static void CreateJpeg(string path, int width, int height)

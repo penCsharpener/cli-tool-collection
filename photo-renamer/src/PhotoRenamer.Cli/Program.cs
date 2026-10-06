@@ -36,7 +36,7 @@ public static class Program
             {
                 if (options.PrintVersion)
                 {
-                    Console.WriteLine("1.1.4");
+                    Console.WriteLine("1.1.6");
                 }
 
                 if (options.DeleteOriginal && !options.ConvertToWebp)

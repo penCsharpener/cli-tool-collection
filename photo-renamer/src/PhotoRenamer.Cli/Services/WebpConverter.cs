@@ -20,12 +20,29 @@ public class WebpConverter : IWebpConverter
         using var image = SKImage.FromBitmap(oriented);
         using var data = image.Encode(SKEncodedImageFormat.Webp, quality);
 
-        using (var output = File.Create(targetPath))
+        var bytes = data.ToArray();
+        var exif = WebpMetadata.ReadJpegExif(sourcePath);
+
+        if (exif is not null)
         {
-            data.SaveTo(output);
+            WebpMetadata.ResetOrientation(exif); // pixels are already rotated
+            bytes = WebpMetadata.AddExif(bytes, exif, oriented.Width, oriented.Height);
         }
 
+        File.WriteAllBytes(targetPath, bytes);
+        CopyFileTimes(sourcePath, targetPath);
+
         return new WebpConversionResult(targetPath, false, IsValidCopy(sourcePath, targetPath));
+    }
+
+    private static void CopyFileTimes(string sourcePath, string targetPath)
+    {
+        var source = new FileInfo(sourcePath);
+
+        // creation time first: on Unix setting it also changes the write time, so the write time has to come after
+        File.SetCreationTimeUtc(targetPath, source.CreationTimeUtc);
+        File.SetLastAccessTimeUtc(targetPath, source.LastAccessTimeUtc);
+        File.SetLastWriteTimeUtc(targetPath, source.LastWriteTimeUtc);
     }
 
     private static bool IsValidCopy(string sourcePath, string webpPath)
