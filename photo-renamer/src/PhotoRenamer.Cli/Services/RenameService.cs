@@ -26,6 +26,9 @@ public class RenameService : IRenameService
     {
         var files = _fileService.GetFiles(_hostEnvironment.ContentRootPath, options.Recursive, null).Where(f => !string.IsNullOrWhiteSpace(f) && (FilterImageFiles(f) || FilterVideoFiles(f)));
 
+        // '__org' files were set aside by --org: restored when the flag is set, otherwise left alone
+        files = options.MarkOriginal ? RestoreOriginalNames(files, options) : files.Where(f => !OriginalMarker.IsMarked(f));
+
         await foreach (var file in FilterRenameableFiles(files, options, stoppingToken))
         {
             file.ApplyOptions(options.OnlyUseFilename);
@@ -46,6 +49,43 @@ public class RenameService : IRenameService
             }
 
             yield return file;
+        }
+    }
+
+    // files marked with '__org' by an earlier run get their name back so they are processed like any other file
+    private static IEnumerable<string> RestoreOriginalNames(IEnumerable<string> files, RenameParameters options)
+    {
+        foreach (var file in files)
+        {
+            if (!OriginalMarker.IsMarked(file))
+            {
+                yield return file;
+                continue;
+            }
+
+            var restoredPath = OriginalMarker.GetRestoredPath(file);
+
+            if (!options.ExecuteRename)
+            {
+                Console.WriteLine($"\"{Path.GetDirectoryName(file)}\":   {Path.GetFileName(file)} ==> {Path.GetFileName(restoredPath)} (restore original name, only done with -x)");
+                continue;
+            }
+
+            var restored = OriginalMarker.Restore(file);
+
+            if (restored is null)
+            {
+                if (!options.NoErrorLogging)
+                {
+                    Console.WriteLine($"\t\t\t\t\tskipped, cannot restore name because it already exists: {Path.GetFileName(restoredPath)}");
+                }
+
+                continue;
+            }
+
+            Console.WriteLine($"\"{Path.GetDirectoryName(file)}\":   {Path.GetFileName(file)} ==> {Path.GetFileName(restored)} (restored original name)");
+
+            yield return restored;
         }
     }
 

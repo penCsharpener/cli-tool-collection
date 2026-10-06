@@ -36,7 +36,7 @@ public static class Program
             {
                 if (options.PrintVersion)
                 {
-                    Console.WriteLine("1.3.1");
+                    Console.WriteLine("1.4.0");
                 }
 
                 if (options.DeleteOriginal && !options.ConvertToWebp && !options.ConvertToH265)
@@ -182,6 +182,11 @@ public static class Program
                                     Console.WriteLine($"\t\t\t\t\toriginal kept, webp is not a valid copy: {name}");
                                 }
                             }
+
+                            if (options.MarkOriginal && !deleteOriginals && result.IsValid)
+                            {
+                                MarkOriginalFile(source);
+                            }
                         }
                         catch (Exception ex) when (!options.NoErrorLogging)
                         {
@@ -236,6 +241,11 @@ public static class Program
                                     Console.WriteLine($"\t\t\t\t\toriginal kept, h265 file is not a valid copy: {name}");
                                 }
                             }
+
+                            if (options.MarkOriginal && !deleteOriginals && result.IsValid && result.Status is VideoConversionStatus.Converted or VideoConversionStatus.AlreadyExisted)
+                            {
+                                MarkOriginalFile(source);
+                            }
                         }
                         catch (Exception ex) when (ex is not OperationCanceledException && !options.NoErrorLogging)
                         {
@@ -288,6 +298,15 @@ public static class Program
         Console.WriteLine("Not confirmed. Original files will be kept.");
 
         return false;
+    }
+
+    private static void MarkOriginalFile(string source)
+    {
+        var marked = OriginalMarker.Mark(source);
+
+        Console.WriteLine(marked is null
+            ? $"\t\t\t\t\toriginal not marked, '{Path.GetFileName(OriginalMarker.GetMarkedPath(source))}' already exists: {Path.GetFileName(source)}"
+            : $"\t\t\t\t\tmarked original: {Path.GetFileName(source)} ==> {Path.GetFileName(marked)}");
     }
 
     private static bool IsVideo(string fileName)

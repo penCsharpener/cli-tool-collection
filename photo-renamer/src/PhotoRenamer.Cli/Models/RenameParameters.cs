@@ -72,4 +72,7 @@ public class RenameParameters : ICommandParameterSet
     [HasDefaultValue]
     [Option("h265-threads", Description = "Number of parallel video encodes (consumer GPUs limit concurrent NVENC sessions).")]
     public int H265Threads { get; set; } = 2;
+
+    [Option("org", Description = "Append '__org' to the original file after it was converted (--webp / --h265). On the next run the suffix is removed again so the file can be converted or renamed once more. Only performed together with -x.")]
+    public bool MarkOriginal { get; set; }
 }
