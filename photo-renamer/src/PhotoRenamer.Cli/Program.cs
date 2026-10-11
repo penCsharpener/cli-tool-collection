@@ -36,7 +36,7 @@ public static class Program
             {
                 if (options.PrintVersion)
                 {
-                    Console.WriteLine("1.4.1");
+                    Console.WriteLine("1.5.0");
                 }
 
                 if (options.DeleteOriginal && !options.ConvertToWebp && !options.ConvertToH265)
@@ -223,7 +223,8 @@ public static class Program
                             {
                                 VideoConversionStatus.AlreadyExisted => $"\t\t\t\t\th265 already exists, not overwritten: {outputName}",
                                 VideoConversionStatus.AlreadyConverted => $"\t\t\t\t\tignored, already converted by PhotoRenamer: {name}",
-                                VideoConversionStatus.AlreadyHevc => $"\t\t\t\t\talready H.265, skipped: {name}",
+                                VideoConversionStatus.SameName => $"\t\t\t\t\tskipped, encoded file would replace the original, use --delete-original for that: {name}",
+                                VideoConversionStatus.NotSmaller => $"\t\t\t\t\tskipped, would not reduce the bitrate ({result.Detail}), original kept: {name}",
                                 VideoConversionStatus.ReplacedSource => $"\t\t\t\t\th265 replaced original: {outputName}",
                                 _ => $"\t\t\t\t\th265: {name} ==> {outputName}",
                             });

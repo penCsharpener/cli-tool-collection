@@ -1,6 +1,6 @@
 namespace PhotoRenamer.Cli.Services;
 
-public record VideoProbe(string? PixFmt, string? ColorRange, string? ColorSpace, string? ColorTransfer, string? ColorPrimaries, double? DurationSeconds, string? CodecName = null, bool IsMarked = false);
+public record VideoProbe(string? PixFmt, string? ColorRange, string? ColorSpace, string? ColorTransfer, string? ColorPrimaries, double? DurationSeconds, string? CodecName = null, bool IsMarked = false, long? BitRate = null);
 
 public static class FfmpegArguments
 {
@@ -26,6 +26,12 @@ public static class FfmpegArguments
             "-tag:v", "hvc1",
             "-fps_mode", "passthrough",
         };
+
+        // never produce more than the source bitrate: re-encoding can only lower it
+        if (probe.BitRate is > 0)
+        {
+            args.AddRange(["-maxrate", probe.BitRate.Value.ToString(), "-bufsize", (probe.BitRate.Value * 2).ToString()]);
+        }
 
         if (probe.PixFmt is not null && probe.PixFmt.Contains("10"))
         {

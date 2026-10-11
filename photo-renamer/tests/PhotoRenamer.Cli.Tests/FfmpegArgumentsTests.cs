@@ -24,6 +24,16 @@ public class FfmpegArgumentsTests
     }
 
     [Fact]
+    public void BuildEncode_Caps_Bitrate_At_Source_Bitrate()
+    {
+        var probe = new VideoProbe("yuv420p", null, null, null, null, 10, "hevc", false, 8_000_000);
+
+        var line = string.Join(' ', FfmpegArguments.BuildEncode("in.mp4", "out.mp4", probe, Options));
+
+        line.Should().Contain("-maxrate 8000000 -bufsize 16000000");
+    }
+
+    [Fact]
     public void BuildEncode_Switches_To_10_Bit_And_Skips_Unknown_Colour_Info()
     {
         var probe = new VideoProbe("yuv420p10le", "pc", "unknown", null, "unspecified", 10);

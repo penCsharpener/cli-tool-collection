@@ -45,14 +45,9 @@ public class FfmpegVideoConverter : IVideoConverter
 
         if (sameFile)
         {
-            if (string.Equals(probe.CodecName, "hevc", StringComparison.OrdinalIgnoreCase))
-            {
-                return new VideoConversionResult(targetPath, VideoConversionStatus.AlreadyHevc, false);
-            }
-
             if (!allowReplaceSource)
             {
-                throw new InvalidOperationException("the encoded file would get the same name as the original. Use --delete-original to replace the original.");
+                return new VideoConversionResult(targetPath, VideoConversionStatus.SameName, false);
             }
         }
         else if (File.Exists(targetPath))
@@ -70,6 +65,14 @@ public class FfmpegVideoConverter : IVideoConverter
             if (exitCode != 0)
             {
                 throw new InvalidOperationException($"ffmpeg failed with exit code {exitCode}: {error.Trim()}");
+            }
+
+            var sourceSize = new FileInfo(sourcePath).Length;
+            var newSize = new FileInfo(partPath).Length;
+
+            if (newSize >= sourceSize)
+            {
+                return new VideoConversionResult(targetPath, VideoConversionStatus.NotSmaller, false, DescribeSizes(sourceSize, newSize, probe.DurationSeconds));
             }
 
             var valid = await IsValidCopyAsync(sourcePath, partPath, token);
@@ -91,6 +94,20 @@ public class FfmpegVideoConverter : IVideoConverter
                 File.Delete(partPath);
             }
         }
+    }
+
+    private static string DescribeSizes(long sourceSize, long newSize, double? durationSeconds)
+    {
+        static string Size(long bytes) => bytes < 1048576 ? $"{bytes / 1024.0:F1} KB" : $"{bytes / 1048576.0:F1} MB";
+
+        var text = $"{Size(sourceSize)} -> {Size(newSize)}";
+
+        if (durationSeconds is > 0)
+        {
+            text += $" ({sourceSize * 8 / durationSeconds.Value / 1000:F0} -> {newSize * 8 / durationSeconds.Value / 1000:F0} kbit/s)";
+        }
+
+        return text;
     }
 
     private static async Task<bool> IsValidCopyAsync(string sourcePath, string targetPath, CancellationToken token)
@@ -120,7 +137,7 @@ public class FfmpegVideoConverter : IVideoConverter
         var (exitCode, output, error) = await RunAsync("ffprobe",
         [
             "-v", "error", "-select_streams", "v:0",
-            "-show_entries", "stream=codec_name,pix_fmt,color_range,color_space,color_transfer,color_primaries:format=duration:format_tags",
+            "-show_entries", "stream=codec_name,pix_fmt,color_range,color_space,color_transfer,color_primaries,bit_rate:format=duration,bit_rate:format_tags",
             "-of", "json", path,
         ], token);
 
@@ -150,7 +167,19 @@ public class FfmpegVideoConverter : IVideoConverter
             marked = tags.EnumerateObject().Any(tag => tag.Name.Equals(FfmpegArguments.MarkerTag, StringComparison.OrdinalIgnoreCase));
         }
 
-        return new VideoProbe(Get(stream, "pix_fmt"), Get(stream, "color_range"), Get(stream, "color_space"), Get(stream, "color_transfer"), Get(stream, "color_primaries"), duration, Get(stream, "codec_name"), marked);
+        // video stream bitrate if the container has it, otherwise the overall bitrate
+        long? bitRate = null;
+
+        if (long.TryParse(Get(stream, "bit_rate"), NumberStyles.Integer, CultureInfo.InvariantCulture, out var streamBitRate) && streamBitRate > 0)
+        {
+            bitRate = streamBitRate;
+        }
+        else if (root.TryGetProperty("format", out var formatForBitRate) && long.TryParse(Get(formatForBitRate, "bit_rate"), NumberStyles.Integer, CultureInfo.InvariantCulture, out var formatBitRate) && formatBitRate > 0)
+        {
+            bitRate = formatBitRate;
+        }
+
+        return new VideoProbe(Get(stream, "pix_fmt"), Get(stream, "color_range"), Get(stream, "color_space"), Get(stream, "color_transfer"), Get(stream, "color_primaries"), duration, Get(stream, "codec_name"), marked, bitRate);
     }
 
     private static async Task<(int ExitCode, string Output, string Error)> RunAsync(string fileName, IEnumerable<string> arguments, CancellationToken token)
