@@ -33,9 +33,8 @@ public class FfmpegVideoConverter : IVideoConverter
         }
     }
 
-    public async Task<VideoConversionResult> ConvertAsync(string sourcePath, string targetPath, VideoEncodeOptions options, bool allowReplaceSource, CancellationToken token)
+    public async Task<VideoConversionResult> ConvertAsync(string sourcePath, string targetPath, VideoEncodeOptions options, CancellationToken token)
     {
-        var sameFile = string.Equals(Path.GetFullPath(sourcePath), Path.GetFullPath(targetPath), OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         var probe = await ProbeAsync(sourcePath, token);
 
         if (probe.IsMarked)
@@ -43,20 +42,17 @@ public class FfmpegVideoConverter : IVideoConverter
             return new VideoConversionResult(sourcePath, VideoConversionStatus.AlreadyConverted, false);
         }
 
-        if (sameFile)
+        var existing = FindExistingOutput(targetPath);
+
+        if (existing is not null)
         {
-            if (!allowReplaceSource)
-            {
-                return new VideoConversionResult(targetPath, VideoConversionStatus.SameName, false);
-            }
-        }
-        else if (File.Exists(targetPath))
-        {
-            return new VideoConversionResult(targetPath, VideoConversionStatus.AlreadyExisted, await IsValidCopyAsync(sourcePath, targetPath, token));
+            return new VideoConversionResult(existing, VideoConversionStatus.AlreadyExisted, await IsValidCopyAsync(sourcePath, existing, token));
         }
 
         var times = FileTimes.Read(sourcePath);
         var partPath = Path.ChangeExtension(targetPath, ".part.mp4");
+
+        Directory.CreateDirectory(Path.GetDirectoryName(targetPath)!);
 
         try
         {
@@ -77,15 +73,10 @@ public class FfmpegVideoConverter : IVideoConverter
 
             var valid = await IsValidCopyAsync(sourcePath, partPath, token);
 
-            if (sameFile && !valid)
-            {
-                throw new InvalidOperationException("the encoded file failed validation, the original was kept.");
-            }
-
-            File.Move(partPath, targetPath, overwrite: sameFile);
+            File.Move(partPath, targetPath);
             FileTimes.Apply(targetPath, times);
 
-            return new VideoConversionResult(targetPath, sameFile ? VideoConversionStatus.ReplacedSource : VideoConversionStatus.Converted, valid);
+            return new VideoConversionResult(targetPath, VideoConversionStatus.Converted, valid);
         }
         finally
         {
@@ -94,6 +85,38 @@ public class FfmpegVideoConverter : IVideoConverter
                 File.Delete(partPath);
             }
         }
+    }
+
+    /// <summary>Output folder name for converted videos, e.g. 20261012_converted_mp4.</summary>
+    public static string GetOutputFolderName(DateTime date)
+    {
+        return $"{date:yyyyMMdd}_converted_mp4";
+    }
+
+    public static bool IsOutputFolder(string? folderName)
+    {
+        return folderName is not null && System.Text.RegularExpressions.Regex.IsMatch(folderName, @"^\d{8}_converted_mp4$");
+    }
+
+    // the output may already exist in the folder of another day
+    private static string? FindExistingOutput(string targetPath)
+    {
+        if (File.Exists(targetPath))
+        {
+            return targetPath;
+        }
+
+        var sourceDirectory = Path.GetDirectoryName(Path.GetDirectoryName(targetPath));
+
+        if (sourceDirectory is null || !Directory.Exists(sourceDirectory))
+        {
+            return null;
+        }
+
+        return Directory.EnumerateDirectories(sourceDirectory, "*_converted_mp4")
+            .Where(d => IsOutputFolder(Path.GetFileName(d)))
+            .Select(d => Path.Combine(d, Path.GetFileName(targetPath)))
+            .FirstOrDefault(File.Exists);
     }
 
     private static string DescribeSizes(long sourceSize, long newSize, double? durationSeconds)

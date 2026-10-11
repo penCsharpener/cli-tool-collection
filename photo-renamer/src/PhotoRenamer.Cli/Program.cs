@@ -36,7 +36,7 @@ public static class Program
             {
                 if (options.PrintVersion)
                 {
-                    Console.WriteLine("1.5.0");
+                    Console.WriteLine("1.5.1");
                 }
 
                 if (options.DeleteOriginal && !options.ConvertToWebp && !options.ConvertToH265)
@@ -65,6 +65,7 @@ public static class Program
                 var printedDirectory = Path.GetFullPath(Directory.GetCurrentDirectory());
                 var webpSources = new List<string>();
                 var videoSources = new List<(string Source, string Target)>();
+                var outputFolderName = FfmpegVideoConverter.GetOutputFolderName(DateTime.Now);
 
                 using var ps = shell == ShellType.PowerShell ? System.Management.Automation.PowerShell.Create() : null;
 
@@ -86,7 +87,7 @@ public static class Program
 
                     if (encodeOnly && !line.IsAlreadyNamed)
                     {
-                        Console.WriteLine($"\"{line.FileInfo.DirectoryName}\":   {line.FileInfo.Name} ==> {Path.ChangeExtension(line.NewFileInfo.Name, ".mp4")} (encoded to H.265, original is kept)");
+                        Console.WriteLine($"\"{line.FileInfo.DirectoryName}\":   {line.FileInfo.Name} ==> {Path.ChangeExtension(line.NewFileInfo.Name, ".mp4")} (encoded to H.265 into {outputFolderName}, original is kept)");
                     }
 
                     if (!line.IsAlreadyNamed && !encodeOnly)
@@ -145,7 +146,7 @@ public static class Program
 
                     if (options.ExecuteRename && encodeOnly)
                     {
-                        videoSources.Add((line.FileInfo.FullName, Path.ChangeExtension(line.NewFileInfo.FullName, ".mp4")));
+                        videoSources.Add((line.FileInfo.FullName, Path.Combine(line.NewFileInfo.DirectoryName!, outputFolderName, Path.ChangeExtension(line.NewFileInfo.Name, ".mp4"))));
                     }
                 }
 
@@ -216,16 +217,14 @@ public static class Program
 
                         try
                         {
-                            var result = await videoConverter.ConvertAsync(source, target, encodeOptions, deleteOriginals, token);
+                            var result = await videoConverter.ConvertAsync(source, target, encodeOptions, token);
                             var outputName = Path.GetFileName(result.OutputPath);
 
                             Console.WriteLine(result.Status switch
                             {
                                 VideoConversionStatus.AlreadyExisted => $"\t\t\t\t\th265 already exists, not overwritten: {outputName}",
                                 VideoConversionStatus.AlreadyConverted => $"\t\t\t\t\tignored, already converted by PhotoRenamer: {name}",
-                                VideoConversionStatus.SameName => $"\t\t\t\t\tskipped, encoded file would replace the original, use --delete-original for that: {name}",
                                 VideoConversionStatus.NotSmaller => $"\t\t\t\t\tskipped, would not reduce the bitrate ({result.Detail}), original kept: {name}",
-                                VideoConversionStatus.ReplacedSource => $"\t\t\t\t\th265 replaced original: {outputName}",
                                 _ => $"\t\t\t\t\th265: {name} ==> {outputName}",
                             });
 
@@ -257,6 +256,15 @@ public static class Program
                             // errors are suppressed by --no-err
                         }
                     });
+
+                    // folders that stayed empty (nothing was encoded into them) are not left behind
+                    foreach (var folder in videoSources.Select(v => Path.GetDirectoryName(v.Target)!).Distinct())
+                    {
+                        if (Directory.Exists(folder) && !Directory.EnumerateFileSystemEntries(folder).Any())
+                        {
+                            Directory.Delete(folder);
+                        }
+                    }
                 }
             });
 

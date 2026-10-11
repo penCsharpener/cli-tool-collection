@@ -26,6 +26,9 @@ public class RenameService : IRenameService
     {
         var files = _fileService.GetFiles(_hostEnvironment.ContentRootPath, options.Recursive, null).Where(f => !string.IsNullOrWhiteSpace(f) && (FilterImageFiles(f) || FilterVideoFiles(f)));
 
+        // converted videos live in '<date>_converted_mp4' folders and are never renamed or converted again
+        files = files.Where(f => !FfmpegVideoConverter.IsOutputFolder(Path.GetFileName(Path.GetDirectoryName(f))));
+
         // '__org' files were set aside by --org: restored when the flag is set, otherwise left alone
         files = options.MarkOriginal ? RestoreOriginalNames(files, options) : files.Where(f => !OriginalMarker.IsMarked(f));
 
